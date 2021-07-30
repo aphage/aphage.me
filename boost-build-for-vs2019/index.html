@@ -1,0 +1,356 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><style data-href="/styles.58a1ac912fb3578e570e.css" id="gatsby-global-css">@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:100;src:local("Montserrat Thin "),local("Montserrat-Thin"),url(/static/montserrat-latin-100-191cc9f50f3b76b9617cb383f19acb7d.woff2) format("woff2"),url(/static/montserrat-latin-100-370318464551d5f25b0f0a78f374faac.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:100;src:local("Montserrat Thin italic"),local("Montserrat-Thinitalic"),url(/static/montserrat-latin-100italic-bdeaeb79db315697bd173a55b097dc18.woff2) format("woff2"),url(/static/montserrat-latin-100italic-ecf7d49386e8f265878e735db34a7c4b.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:200;src:local("Montserrat Extra Light "),local("Montserrat-Extra Light"),url(/static/montserrat-latin-200-85d5ef9db7f2dc6979172a4a3b2c57cb.woff2) format("woff2"),url(/static/montserrat-latin-200-1fc98e126a3d152549240e6244d7e669.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:200;src:local("Montserrat Extra Light italic"),local("Montserrat-Extra Lightitalic"),url(/static/montserrat-latin-200italic-49095760a498d024fe1a85a078850df9.woff2) format("woff2"),url(/static/montserrat-latin-200italic-fe46cf8b9462c820457d3bf537e4057f.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:300;src:local("Montserrat Light "),local("Montserrat-Light"),url(/static/montserrat-latin-300-7c3daf12b706645b5d3710f863a4da04.woff2) format("woff2"),url(/static/montserrat-latin-300-8dc95fab9cf98d02ca8d76e97d3dff60.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:300;src:local("Montserrat Light italic"),local("Montserrat-Lightitalic"),url(/static/montserrat-latin-300italic-f20b178ca2024a5eac8e42e6649db86c.woff2) format("woff2"),url(/static/montserrat-latin-300italic-3fe16939288856e8e828fa2661bf2354.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:400;src:local("Montserrat Regular "),local("Montserrat-Regular"),url(/static/montserrat-latin-400-bc3aa95dca08f5fee5291e34959c27bc.woff2) format("woff2"),url(/static/montserrat-latin-400-8102c4838f9e3d08dad644290a9cb701.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:400;src:local("Montserrat Regular italic"),local("Montserrat-Regularitalic"),url(/static/montserrat-latin-400italic-5cad650422a7184467af5a4d17b264c4.woff2) format("woff2"),url(/static/montserrat-latin-400italic-d191f22af3bb50902b99ac577f81a322.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:500;src:local("Montserrat Medium "),local("Montserrat-Medium"),url(/static/montserrat-latin-500-92d16e458625f4d2c8940f6bdca0ff09.woff2) format("woff2"),url(/static/montserrat-latin-500-8b763220218ffc11c57c84ddb80e7b26.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:500;src:local("Montserrat Medium italic"),local("Montserrat-Mediumitalic"),url(/static/montserrat-latin-500italic-47bfcca6b69d6a9acca7a8bff17193e2.woff2) format("woff2"),url(/static/montserrat-latin-500italic-72c01f753c3940c0b9cb6bf2389caddf.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:600;src:local("Montserrat SemiBold "),local("Montserrat-SemiBold"),url(/static/montserrat-latin-600-6fb1b5623e528e27c18658fecf5ee0ee.woff2) format("woff2"),url(/static/montserrat-latin-600-7c839d15a6f54e7025ba8c0c4b333e8f.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:600;src:local("Montserrat SemiBold italic"),local("Montserrat-SemiBolditalic"),url(/static/montserrat-latin-600italic-60789af1c9338ed1a9546722ec54b4f7.woff2) format("woff2"),url(/static/montserrat-latin-600italic-f3d4de8d0afb19e777c79032ce828e3d.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:700;src:local("Montserrat Bold "),local("Montserrat-Bold"),url(/static/montserrat-latin-700-39d93cf678c740f9f6b2b1cfde34bee3.woff2) format("woff2"),url(/static/montserrat-latin-700-80f10bd382f0df1cd650fec59f3c9394.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:700;src:local("Montserrat Bold italic"),local("Montserrat-Bolditalic"),url(/static/montserrat-latin-700italic-ba136d97b14e82284dd595e257f11c47.woff2) format("woff2"),url(/static/montserrat-latin-700italic-8c98142b425630821139c24bd1698700.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:800;src:local("Montserrat ExtraBold "),local("Montserrat-ExtraBold"),url(/static/montserrat-latin-800-b7018be9ed6cd94da8b6675b3a468c3b.woff2) format("woff2"),url(/static/montserrat-latin-800-9a9befcf50d64f9d2d19d8b1d1984add.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:800;src:local("Montserrat ExtraBold italic"),local("Montserrat-ExtraBolditalic"),url(/static/montserrat-latin-800italic-540ffdd223d1a9ad3d4e678e1a23372e.woff2) format("woff2"),url(/static/montserrat-latin-800italic-897086f99f4e1f45e6b1e9368527d0bc.woff) format("woff")}@font-face{font-family:Montserrat;font-style:normal;font-display:swap;font-weight:900;src:local("Montserrat Black "),local("Montserrat-Black"),url(/static/montserrat-latin-900-58cd789700850375b834e8b6776002eb.woff2) format("woff2"),url(/static/montserrat-latin-900-26d42c9428780e545a540bbb50c84bce.woff) format("woff")}@font-face{font-family:Montserrat;font-style:italic;font-display:swap;font-weight:900;src:local("Montserrat Black italic"),local("Montserrat-Blackitalic"),url(/static/montserrat-latin-900italic-451157bc8861fe54f523b3669a3def71.woff2) format("woff2"),url(/static/montserrat-latin-900italic-a8ec4957e1c24f5793305763ad9845b3.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:300;src:local("Merriweather Light "),local("Merriweather-Light"),url(/static/merriweather-latin-300-b1158cfcd4aacb9d8fb61625e37af46a.woff2) format("woff2"),url(/static/merriweather-latin-300-cc7de05e166e90320d7d896e0f72a19d.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:300;src:local("Merriweather Light italic"),local("Merriweather-Lightitalic"),url(/static/merriweather-latin-300italic-8fe52a48089d6ebe46db0b8e7cc66263.woff2) format("woff2"),url(/static/merriweather-latin-300italic-e1331f5397c2a673f9d3765138debdb5.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:400;src:local("Merriweather Regular "),local("Merriweather-Regular"),url(/static/merriweather-latin-400-8276fdb72ae8f4714d4e6eba704cc39f.woff2) format("woff2"),url(/static/merriweather-latin-400-69f09800f4f6479d06e44eba837df872.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:400;src:local("Merriweather Regular italic"),local("Merriweather-Regularitalic"),url(/static/merriweather-latin-400italic-3a9be9ea9f7aa4af6de7307df21d9fc0.woff2) format("woff2"),url(/static/merriweather-latin-400italic-d76079ed7541a433a54f79316de086e9.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:700;src:local("Merriweather Bold "),local("Merriweather-Bold"),url(/static/merriweather-latin-700-fa534be7ffa380e39a7f6e03bf9a5e03.woff2) format("woff2"),url(/static/merriweather-latin-700-ba56ea84b8084b7ff9677f50d3cd81bd.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:700;src:local("Merriweather Bold italic"),local("Merriweather-Bolditalic"),url(/static/merriweather-latin-700italic-1ef5edaaa20ae53ea50399884c5e48c6.woff2) format("woff2"),url(/static/merriweather-latin-700italic-534bc9e7ce93c73d73426e46acd78092.woff) format("woff")}@font-face{font-family:Merriweather;font-style:normal;font-display:swap;font-weight:900;src:local("Merriweather Black "),local("Merriweather-Black"),url(/static/merriweather-latin-900-7528fb70e8a4a82c7305e72ff43ac25f.woff2) format("woff2"),url(/static/merriweather-latin-900-3799b6e2f5ed3fcccf9d7a708d7419fa.woff) format("woff")}@font-face{font-family:Merriweather;font-style:italic;font-display:swap;font-weight:900;src:local("Merriweather Black italic"),local("Merriweather-Blackitalic"),url(/static/merriweather-latin-900italic-e1b4d2aaa78e12ad84aaf8a56321e4c2.woff2) format("woff2"),url(/static/merriweather-latin-900italic-2ae22f731b3424e8dbb4b37f7ca6e708.woff) format("woff")}
+
+
+/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}main{display:block}h1{font-size:2em;margin:.67em 0}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent}abbr[title]{border-bottom:none;text-decoration:underline;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details{display:block}summary{display:list-item}[hidden]{display:none}:root{--maxWidth-none:"none";--maxWidth-xs:20rem;--maxWidth-sm:24rem;--maxWidth-md:28rem;--maxWidth-lg:32rem;--maxWidth-xl:36rem;--maxWidth-2xl:42rem;--maxWidth-3xl:48rem;--maxWidth-4xl:56rem;--maxWidth-full:"100%";--maxWidth-wrapper:var(--maxWidth-2xl);--spacing-px:"1px";--spacing-0:0;--spacing-1:0.25rem;--spacing-2:0.5rem;--spacing-3:0.75rem;--spacing-4:1rem;--spacing-5:1.25rem;--spacing-6:1.5rem;--spacing-8:2rem;--spacing-10:2.5rem;--spacing-12:3rem;--spacing-16:4rem;--spacing-20:5rem;--spacing-24:6rem;--spacing-32:8rem;--fontFamily-sans:Montserrat,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";--fontFamily-serif:"Merriweather","Georgia",Cambria,"Times New Roman",Times,serif;--font-body:var(--fontFamily-serif);--font-heading:var(--fontFamily-sans);--fontWeight-normal:400;--fontWeight-medium:500;--fontWeight-semibold:600;--fontWeight-bold:700;--fontWeight-extrabold:800;--fontWeight-black:900;--fontSize-root:16px;--lineHeight-none:1;--lineHeight-tight:1.1;--lineHeight-normal:1.5;--lineHeight-relaxed:1.625;--fontSize-0:0.833rem;--fontSize-1:1rem;--fontSize-2:1.2rem;--fontSize-3:1.44rem;--fontSize-4:1.728rem;--fontSize-5:2.074rem;--fontSize-6:2.488rem;--fontSize-7:2.986rem;--color-primary:#005b99;--color-text:#2e353f;--color-text-light:#4f5969;--color-heading:#1a202c;--color-heading-black:#000;--color-accent:#d1dce5}*,:after,:before{box-sizing:border-box}html{line-height:var(--lineHeight-normal);font-size:var(--fontSize-root);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}body{font-family:var(--font-body);font-size:var(--fontSize-1);color:var(--color-text)}footer{padding:var(--spacing-6) var(--spacing-0)}hr{background:var(--color-accent);height:1px;border:0}h1,h2,h3,h4,h5,h6{font-family:var(--font-heading);margin-top:var(--spacing-12);margin-bottom:var(--spacing-6);line-height:var(--lineHeight-tight);letter-spacing:-.025em}h2,h3,h4,h5,h6{font-weight:var(--fontWeight-bold);color:var(--color-heading)}h1{font-weight:var(--fontWeight-black);font-size:var(--fontSize-6);color:var(--color-heading-black)}h2{font-size:var(--fontSize-5)}h3{font-size:var(--fontSize-4)}h4{font-size:var(--fontSize-3)}h5{font-size:var(--fontSize-2)}h6{font-size:var(--fontSize-1)}h1>a,h2>a,h3>a,h4>a,h5>a,h6>a{color:inherit;text-decoration:none}p{line-height:var(--lineHeight-relaxed);--baseline-multiplier:0.179;--x-height-multiplier:0.35;margin:var(--spacing-0) var(--spacing-0) var(--spacing-8) var(--spacing-0)}ol,p,ul{padding:var(--spacing-0)}ol,ul{margin-left:var(--spacing-0);margin-right:var(--spacing-0);margin-bottom:var(--spacing-8);list-style-position:outside;list-style-image:none}ol li,ul li{padding-left:var(--spacing-0)}li>p,ol li,ul li{margin-bottom:calc(var(--spacing-8)/2)}li :last-child{margin-bottom:var(--spacing-0)}li>ul{margin-left:var(--spacing-8);margin-top:calc(var(--spacing-8)/2)}blockquote{color:var(--color-text-light);margin-left:calc(var(--spacing-6)*-1);margin-right:var(--spacing-8);padding:var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--spacing-6);border-left:var(--spacing-1) solid var(--color-primary);font-size:var(--fontSize-2);font-style:italic;margin-bottom:var(--spacing-8)}blockquote>:last-child{margin-bottom:var(--spacing-0)}blockquote>ol,blockquote>ul{list-style-position:inside}table{width:100%;margin-bottom:var(--spacing-8);border-collapse:collapse;border-spacing:.25rem}table thead tr th{border-bottom:1px solid var(--color-accent)}a{color:var(--color-primary)}a:focus,a:hover{text-decoration:none}.global-wrapper{margin:var(--spacing-0) auto;max-width:var(--maxWidth-wrapper);padding:var(--spacing-10) var(--spacing-5)}.global-wrapper[data-is-root-path=true] .bio{margin-bottom:var(--spacing-20)}.global-header{margin-bottom:var(--spacing-12)}.main-heading{font-size:var(--fontSize-7);margin:0}.post-list-item{margin-bottom:var(--spacing-8);margin-top:var(--spacing-8)}.post-list-item p{margin-bottom:var(--spacing-0)}.post-list-item h2{font-size:var(--fontSize-4);color:var(--color-primary);margin-bottom:var(--spacing-2);margin-top:var(--spacing-0)}.post-list-item header{margin-bottom:var(--spacing-4)}.header-link-home{font-weight:var(--fontWeight-bold);font-family:var(--font-heading);text-decoration:none;font-size:var(--fontSize-2)}.bio{display:flex;margin-bottom:var(--spacing-16)}.bio-avatar,.bio p{margin-bottom:var(--spacing-0)}.bio-avatar{margin-right:var(--spacing-4);min-width:50px;border-radius:100%}.blog-post header h1{margin:var(--spacing-0) var(--spacing-0) var(--spacing-4) var(--spacing-0)}.blog-post header p{font-size:var(--fontSize-2);font-family:var(--font-heading)}.blog-post-nav ul{margin:var(--spacing-0)}.gatsby-highlight{margin-bottom:var(--spacing-8)}@media (max-width:42rem){blockquote{padding:var(--spacing-0) var(--spacing-0) var(--spacing-0) var(--spacing-4);margin-left:var(--spacing-0)}ol,ul{list-style-position:inside}}code[class*=language-],pre[class*=language-]{color:#000;background:none;text-shadow:0 1px #fff;font-family:Consolas,Monaco,Andale Mono,Ubuntu Mono,monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-ms-hyphens:none;hyphens:none}code[class*=language-]::selection,code[class*=language-] ::selection,pre[class*=language-]::selection,pre[class*=language-] ::selection{text-shadow:none;background:#b3d4fc}@media print{code[class*=language-],pre[class*=language-]{text-shadow:none}}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#f5f2f0}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#708090}.token.punctuation{color:#999}.token.namespace{opacity:.7}.token.boolean,.token.constant,.token.deleted,.token.number,.token.property,.token.symbol,.token.tag{color:#905}.token.attr-name,.token.builtin,.token.char,.token.inserted,.token.selector,.token.string{color:#690}.language-css .token.string,.style .token.string,.token.entity,.token.operator,.token.url{color:#9a6e3a;background:hsla(0,0%,100%,.5)}.token.atrule,.token.attr-value,.token.keyword{color:#07a}.token.class-name,.token.function{color:#dd4a68}.token.important,.token.regex,.token.variable{color:#e90}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}</style><meta name="generator" content="Gatsby 2.32.13"/><link rel="alternate" type="application/rss+xml" href="/rss.xml"/><link rel="icon" href="/favicon-32x32.png?v=a49522a767cf10e8c842fc75a81022fb" type="image/png"/><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"/><meta name="theme-color" content="#663399"/><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png?v=a49522a767cf10e8c842fc75a81022fb"/><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png?v=a49522a767cf10e8c842fc75a81022fb"/><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png?v=a49522a767cf10e8c842fc75a81022fb"/><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png?v=a49522a767cf10e8c842fc75a81022fb"/><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=a49522a767cf10e8c842fc75a81022fb"/><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png?v=a49522a767cf10e8c842fc75a81022fb"/><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png?v=a49522a767cf10e8c842fc75a81022fb"/><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=a49522a767cf10e8c842fc75a81022fb"/><title data-react-helmet="true">boost build for vs2019 | Hi, aphage</title><meta data-react-helmet="true" name="description" content="Download for boost 下载 boost Open the link: https://www.boost.org/ 打开链接：https://www.boost.org/ Download page: https://www.boost.org/users/download/ 下载页面：https…"/><meta data-react-helmet="true" property="og:title" content="boost build for vs2019"/><meta data-react-helmet="true" property="og:description" content="Download for boost 下载 boost Open the link: https://www.boost.org/ 打开链接：https://www.boost.org/ Download page: https://www.boost.org/users/download/ 下载页面：https…"/><meta data-react-helmet="true" property="og:type" content="website"/><meta data-react-helmet="true" name="twitter:card" content="summary"/><meta data-react-helmet="true" name="twitter:creator" content="diyphage"/><meta data-react-helmet="true" name="twitter:title" content="boost build for vs2019"/><meta data-react-helmet="true" name="twitter:description" content="Download for boost 下载 boost Open the link: https://www.boost.org/ 打开链接：https://www.boost.org/ Download page: https://www.boost.org/users/download/ 下载页面：https…"/><link as="script" rel="preload" href="/webpack-runtime-7d25764ea0bd56983ffd.js"/><link as="script" rel="preload" href="/framework-8e528b732ab2eaadb7b7.js"/><link as="script" rel="preload" href="/styles-755093da0c07f4b49226.js"/><link as="script" rel="preload" href="/app-afb5732d42f98efb531b.js"/><link as="script" rel="preload" href="/commons-6874860df7f66487eb60.js"/><link as="script" rel="preload" href="/cd7d5f864fc9e15ed8adef086269b0aeff617554-fff156d3de3a9bb5caad.js"/><link as="script" rel="preload" href="/component---src-templates-blog-post-js-9d982ded75bfbb0a31d5.js"/><link as="fetch" rel="preload" href="/page-data/boost-build-for-vs2019/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/2241071305.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/2841359383.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" id="gatsby-focus-wrapper"><div class="global-wrapper" data-is-root-path="false"><header class="global-header"><a class="header-link-home" href="/">Hi, aphage</a></header><main><article class="blog-post" itemscope="" itemType="http://schema.org/Article"><header><h1 itemProp="headline">boost build for vs2019</h1><p>March 29, 2020</p></header><section itemProp="articleBody"><p>Download for boost</p>
+<p>下载 boost</p>
+<p>Open the link: <a href="https://www.boost.org/">https://www.boost.org/</a></p>
+<p>打开链接：<a href="https://www.boost.org/">https://www.boost.org/</a></p>
+<p>Download page: <a href="https://www.boost.org/users/download/">https://www.boost.org/users/download/</a></p>
+<p>下载页面：<a href="https://www.boost.org/users/download/">https://www.boost.org/users/download/</a></p>
+<!--more-->
+<p>Now, boost version is 1.72.0</p>
+<p>现在的boost版本是1.72.0</p>
+<p>Download file: <a href="https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.zip">https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.zip</a></p>
+<p>下载文件：<a href="https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.zip">https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.zip</a></p>
+<p>Tip: Forbidden!</p>
+<p>提示：Forbidden!</p>
+<p>Previously boost was saved on sourceforge</p>
+<p>以前boost是保存在上sourceforge的</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/c59b74fd50bdf0c5963d52fe899b315d/7161f/TIM20200329221932.png"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 77.21518987341771%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAAByUlEQVQ4y6VUa5ObMAz0//+DSS595EKIIYBfYJtntpLh8iHXtL0pMzsrhEe2tGvEOI7QroOyHbS1UFpDG5vg2g6xHxBij9D/G8Sy3JFVFpfaguPn536/fwnCOYfqdkNLvBbAfz3CGIOqqtC2LWKMmOcZC2Gapt/j07cx8bzlhQ8BtdJQNLOG5qe0STFvwOi6D+6IHbF/yrWpO+/XvBhIFOcD+nHCMM4YJsby19bWmX2es7jmOU4/T6Roi6puaMcO1hrwKCypfj6/4+14RNM0KcfgU70UpSwLHL//gGws8krjcpXY7XY4vB1wOOxTvN/vKaZ3Yo6zLHvpAGFpx4JU1l2EC32aiywkCkJZlrjRN+aiKCClTFzX9WuVtVKQ1xwlLfQdG7lH/wRWn3kYhkcukJiB8iwGx7yGWTSNwnt2wfmSo1EmFUyLQ3wsjBv3H3jabN1wzYtAV6txHrX1sI6skOziHpb4qs9Ty6y0lNdUbODWyEI92Se1Ty1F6wgtvLYY6V7/sSBfu2+kckZtsyX09nMwVMSQbSwJYslW+nSCIW7pPcSwGpngE8LGHoLb0lshRafVfFOoGA98ItPzaUe6ViNfs2VlFucVfgGEcIm63JuQTgAAAABJRU5ErkJggg=='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="I am a image"
+        title="I am a image"
+        src="/static/c59b74fd50bdf0c5963d52fe899b315d/f058b/TIM20200329221932.png"
+        srcset="/static/c59b74fd50bdf0c5963d52fe899b315d/c26ae/TIM20200329221932.png 158w,
+/static/c59b74fd50bdf0c5963d52fe899b315d/6bdcf/TIM20200329221932.png 315w,
+/static/c59b74fd50bdf0c5963d52fe899b315d/f058b/TIM20200329221932.png 630w,
+/static/c59b74fd50bdf0c5963d52fe899b315d/40601/TIM20200329221932.png 945w,
+/static/c59b74fd50bdf0c5963d52fe899b315d/7161f/TIM20200329221932.png 1182w"
+        sizes="(max-width: 630px) 100vw, 630px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+      />
+  </a>
+    </span></p>
+<p>Open the this link</p>
+<p>打开这个连接</p>
+<p>Open the boost directory</p>
+<p>打开 boost 目录</p>
+<p>Find the required version and download</p>
+<p>找到需要的版本然后下载</p>
+<p>Tip: The boost-binaries directory is a compiled boost version</p>
+<p>提示：boost-binaries目录是已经编译过的boost版本</p>
+<p>Unzip it now</p>
+<p>现在解压它</p>
+<p>Open x64 Native Tools Command Prompt for VS 2019</p>
+<p>打开 x64 Native Tools Command Prompt for VS 2019</p>
+<p>Tip: <code class="language-text">x86_x64 Cross Tools Command Prompt for VS 2019</code> Can compile 64-bit programs on x86</p>
+<p>提示: <code class="language-text">x86_x64 Cross Tools Command Prompt for VS 2019</code> 可以让x86编译出x64程序</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 388px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/d821e7f9a83e78d42d67389f45c05b58/96c67/TIM20200330113811.png"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 108.22784810126582%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAWCAYAAADAQbwGAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEvklEQVQ4y1VVyY4bVRT1byDBikWUtNMd2zXPVbbL5Xkoj12eOrbbcSdkgnQEaZIWQYrYEgUhBdggkQ2sWbBlxefwA4fzyhCSxdV9fs/vvDuccyuj6CZuyCaakYrfvsnj1eMbcLwAlh/B9EI4xSqCsA7bD1Gs1GB7Rai8oxsWDMNMzbQdOFoB2eoSGcPQkZMMjJt5/P3XCr+/NDGIGzjbrbCcTzCfzzCaTNFqd+mPEUZVqJr+FkyY7XhwdQXZMEHGNDXIioZ2pOCPlxLePPsYy6GHxTjEySRELbRRkJUURBZe1aDrRgokvMZ93TC41mG7vohQgwBV5BzOb7fw4tsfcGvmYTCaIpnOMF8ssdlscHx8TEuwXJ4w6gWmPJvNZlit1mg0mnxIRbFYYoQpIF9RjnB5Psbrn77D+VrHbsm0Txr4ZNNB4DvQdJGmAcuyYLNm2r9pu64Hg5EqqoFKoO0BLVNNX7jYqnj9JIdbExnNdow47mI4HKDVbKJer6PT6aDb7aHXi9/6ZrPF/TYb5WLek/eAhqHCsVScjlW42hU8WEjYrcfYnvRwd5egVotQLoeIoojremphWElTFesoqrDTAZKO/G6EGi7W1/Hz06s4SzT0u1WM+xHGcYQg8OB5ewuCAL4f0BfhOC5TdrnvIk+mzLrKOzWUr+Pp4yWe//gn7p4EmM/YgEWCW9s10x5iMBhgMpmkjZiQPuPxhCXpc3/I3yNohotpV/0vQg2qUsDl/RC/fn8Tn54oWIzKpE+A5agIU1chFSTIkgRFkunfN01VSD0T81hHxmJ0Jmuok5ifrUw8uiljO5Jgl+soNxoo1RvwWTu/UuG6Bo+18ysRSqydOCuzjuIsKxuYxiYymiqlgLalYTc+wrD8Ee7OJKybXTzotnE+GuE2gbcEfRjH2FaruNNq4R67/JApi/UZzxNSKfRsZJqNOiwCKoqCp2cGfnnhYDuWcVZq4IKRXNQa+LxcxjPSRvjn7Ta+YEQXlOAlgS4Z4RM+tuP9Nv+fEVo19D1tNiMVlrynzeY0wXozop8wvSpC8s0NSZ02iV6tpemKvUqrna4l00olmFGVfcqKQmJvbuDNV1ncTmSMejUk/QqmgwhF32XjTPikiM2LDtNzBWVoHs2mekwOGZ3qyZTLJS5IbjblzsJFXNcJKFHDKyzmU+p4jbjfT1Uh9Cv8cDhCkkxTTQt9C/o4jpMGlenzzxoBhRbvJ1l8ufyQTZE5bSJSp0TalNPzfJ4UkdW3E0eR91lJssxJpKUaF/sZSVLT8ZUvKHi08fD1/RJWAxmt3px6ZmT9Y1TrbfQHYzSabRwzMqFjQWgRXTKdMsKY4jDThzOG6SJXIKCk43R0iI7/Ae6RNpvlAJt5BydJC4bpQTd9qoGT2Q1oPuVXhE8ZFktFjq0iJ5C9B5zOVzjMaTg4VFF3LezYBNF1WbFZBqah2cge6cgeanzYQIEPK6qeDlwx0oSJ4WpZZppppiCLCxquZWWMtWc4rb+CZJXQjpcIKgNUmwm6/QVHf8yhO0eJ3xdJ1v//pjBVka6qW6iWCCgiO+DrV7MK8kcc61KIKwcasjkP1w4dHBx5uJ7zmQVLIzmQ0shZr/RDtf+mCEoVZAuLWME/vS8vJedK1eEAAAAASUVORK5CYII='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="I am a image"
+        title="I am a image"
+        src="/static/d821e7f9a83e78d42d67389f45c05b58/96c67/TIM20200330113811.png"
+        srcset="/static/d821e7f9a83e78d42d67389f45c05b58/c26ae/TIM20200330113811.png 158w,
+/static/d821e7f9a83e78d42d67389f45c05b58/6bdcf/TIM20200330113811.png 315w,
+/static/d821e7f9a83e78d42d67389f45c05b58/96c67/TIM20200330113811.png 388w"
+        sizes="(max-width: 388px) 100vw, 388px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+      />
+  </a>
+    </span></p>
+<p>Enter the boost directory and run <code class="language-text">bootstrap.bat</code></p>
+<p>进入 boost 目录然后运行 <code class="language-text">bootstrap.bat</code></p>
+<p>Get a <code class="language-text">b2.exe</code></p>
+<p>获得一个 <code class="language-text">b2.exe</code></p>
+<p>run</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">b2 --help</code></pre></div>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">Boost.Build 4.0-git
+
+Project-specific help:
+
+  Project has jamfile at Jamroot
+
+Usage:
+
+  b2 [options] [properties] [install|stage]
+
+  Builds and installs Boost.
+
+Targets and Related Options:
+
+  install                 Install headers and compiled library files to the
+  =======                 configured locations (below).
+
+  --prefix=&lt;PREFIX&gt;       Install architecture independent files here.
+                          Default: C:\Boost on Windows
+                          Default: /usr/local on Unix, Linux, etc.
+
+  --exec-prefix=&lt;EPREFIX&gt; Install architecture dependent files here.
+                          Default: &lt;PREFIX&gt;
+
+  --libdir=&lt;LIBDIR&gt;       Install library files here.
+                          Default: &lt;EPREFIX&gt;/lib
+
+  --includedir=&lt;HDRDIR&gt;   Install header files here.
+                          Default: &lt;PREFIX&gt;/include
+
+  --cmakedir=&lt;CMAKEDIR&gt;   Install CMake configuration files here.
+                          Default: &lt;LIBDIR&gt;/cmake
+
+  --no-cmake-config       Do not install CMake configuration files.
+
+  stage                   Build and install only compiled library files to the
+  =====                   stage directory.
+
+  --stagedir=&lt;STAGEDIR&gt;   Install library files here
+                          Default: ./stage
+
+Other Options:
+
+  --build-type=&lt;type&gt;     Build the specified pre-defined set of variations of
+                          the libraries. Note, that which variants get built
+                          depends on what each library supports.
+
+                              -- minimal -- (default) Builds a minimal set of
+                              variants. On Windows, these are static
+                              multithreaded libraries in debug and release
+                              modes, using shared runtime. On Linux, these are
+                              static and shared multithreaded libraries in
+                              release mode.
+
+                              -- complete -- Build all possible variations.
+
+  --build-dir=DIR         Build in this location instead of building within
+                          the distribution tree. Recommended!
+
+  --show-libraries        Display the list of Boost libraries that require
+                          build and installation steps, and then exit.
+
+  --layout=&lt;layout&gt;       Determine whether to choose library names and header
+                          locations such that multiple versions of Boost or
+                          multiple compilers can be used on the same system.
+
+                              -- versioned -- Names of boost binaries include
+                              the Boost version number, name and version of
+                              the compiler and encoded build properties. Boost
+                              headers are installed in a subdirectory of
+                              &lt;HDRDIR&gt; whose name contains the Boost version
+                              number.
+
+                              -- tagged -- Names of boost binaries include the
+                              encoded build properties such as variant and
+                              threading, but do not including compiler name
+                              and version, or Boost version. This option is
+                              useful if you build several variants of Boost,
+                              using the same compiler.
+
+                              -- system -- Binaries names do not include the
+                              Boost version number or the name and version
+                              number of the compiler. Boost headers are
+                              installed directly into &lt;HDRDIR&gt;. This option is
+                              intended for system integrators building
+                              distribution packages.
+
+                          The default value is &#39;versioned&#39; on Windows, and
+                          &#39;system&#39; on Unix.
+
+  --buildid=ID            Add the specified ID to the name of built libraries.
+                          The default is to not add anything.
+
+  --python-buildid=ID     Add the specified ID to the name of built libraries
+                          that depend on Python. The default is to not add
+                          anything. This ID is added in addition to --buildid.
+
+  --help                  This message.
+
+  --with-&lt;library&gt;        Build and install the specified &lt;library&gt;. If this
+                          option is used, only libraries specified using this
+                          option will be built.
+
+  --without-&lt;library&gt;     Do not build, stage, or install the specified
+                          &lt;library&gt;. By default, all libraries are built.
+
+Properties:
+
+  toolset=toolset         Indicate the toolset to build with.
+
+  variant=debug|release   Select the build variant
+
+  link=static|shared      Whether to build static or shared libraries
+
+  threading=single|multi  Whether to build single or multithreaded binaries
+
+  runtime-link=static|shared
+                          Whether to link to static or shared C and C++
+                          runtime.
+
+
+General command line usage:
+
+    b2 [options] [properties] [targets]
+
+  Options, properties and targets can be specified in any order.
+
+Important Options:
+
+  * --clean Remove targets instead of building
+  * -a Rebuild everything
+  * -n Don&#39;t execute the commands, only print them
+  * -d+2 Show commands as they are executed
+  * -d0 Suppress all informational messages
+  * -q Stop at first error
+  * --reconfigure Rerun all configuration checks
+  * --debug-configuration Diagnose configuration
+  * --debug-building Report which targets are built with what properties
+  * --debug-generator Diagnose generator search/execution
+
+Further Help:
+
+  The following options can be used to obtain additional documentation.
+
+  * --help-options Print more obscure command line options.
+  * --help-internal Boost.Build implementation details.
+  * --help-doc-options Implementation details doc formatting.
+
+...found 1 target...</code></pre></div>
+<p>I want the full version, <code class="language-text">--build-type = complete</code> means build all versions</p>
+<p>我想要全部版本，<code class="language-text">--build-type=complete</code> 表示编译所有版本</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">b2 --toolset<span class="token operator">=</span>msvc-16.5.1 --build-type<span class="token operator">=</span>complete stage</code></pre></div>
+<p><code class="language-text">--toolset=msvc-16.5.1</code> Set the compiled version, which can be found in the menu about in vs</p>
+<p><code class="language-text">--toolset=msvc-16.5.1</code> 设置编译版本，可以在vs中的菜单关于中找到</p>
+<p>It takes a long time to compile, you can specify the date_time to compile</p>
+<p>编译全部时间比较久，可以先指定编译 date_time 体验一下</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">b2 --toolset<span class="token operator">=</span>msvc-16.5.1 --build-type<span class="token operator">=</span>complete  --with-date_time stage</code></pre></div>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">  stage                   Build and install only compiled library files to the
+  =====                   stage directory.
+  
+  --stagedir=&lt;STAGEDIR&gt;   Install library files here
+                          Default: ./stage</code></pre></div>
+<p>Follow the prompts to know the default compiled files are in the ./stage directory</p>
+<p>根据提示知道默认编译后的文件在./stage目录</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/13c6399460a920ae69e3193af9d7dfdd/339e3/TIM20200330121151.png"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 63.291139240506325%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB8UlEQVQ4y11TCW7jMAzM/59X7GKLdTe1HduRD/mM72OWQ0dpUQGEKFscDofUpSwt0jRFXdd4PB5omgZ936PrOrRi8zxj33ccx677tm268/u6rnqXxm+0Cy88+gGr7Azi+bsdx6HWdj3GaQbXum7oh/HprxjGSX3eu+z7gXmsUZYllmVREF6iOVCutu3QtC3GcVQmrGhZ1heQSy4Mdy3583qFHwRIkhhhGML3ffXzPNcgSkOfQARM4hjGGEzTKUlVVWfJzEJ2vJxlufwoURSFJDEoCNDUCkhNnb4MZAxBWBWlov4KSJr8GUURblGMNMtwl8xGWHOf5lM3gpUC0EngJoEkUNhSdeWZkiggLwexwdv7FW9/fbx/RvjlBfhzjfD7Xwjbr2gEMzAlrnGOKBfgYYMXJPgIJXE9ohp23LJKG6uA1CIWTahlJgyZ3flOm1YaUj1Ha3s2xZ0XaWDTtF8MqRkbYEwqJaew0gBzv5+geaY6fZ9RBtKvxfidM8mzdpmAt1sIz/Oks4F02le2gezsdpIkyoBMyZyBHJGikCY+u05Aa+0XwziOBCDAXVgRgBKQHY3suRjI5rHbHDUmsK/z9hqnyzljpQaTgbWFaFNpRgaxJC7uDB6GQQPd03QS6O5Kdm/0p7n36V7D+aaPl//zP+0/WVXnP8rVmLYAAAAASUVORK5CYII='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="I am a image"
+        title="I am a image"
+        src="/static/13c6399460a920ae69e3193af9d7dfdd/f058b/TIM20200330121151.png"
+        srcset="/static/13c6399460a920ae69e3193af9d7dfdd/c26ae/TIM20200330121151.png 158w,
+/static/13c6399460a920ae69e3193af9d7dfdd/6bdcf/TIM20200330121151.png 315w,
+/static/13c6399460a920ae69e3193af9d7dfdd/f058b/TIM20200330121151.png 630w,
+/static/13c6399460a920ae69e3193af9d7dfdd/40601/TIM20200330121151.png 945w,
+/static/13c6399460a920ae69e3193af9d7dfdd/339e3/TIM20200330121151.png 977w"
+        sizes="(max-width: 630px) 100vw, 630px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+      />
+  </a>
+    </span></p>
+<p>link= static ： 静态库。 生成的库文件名称以 “lib”开头</p>
+<p>link= shared ： 动态库。生成的库文件名称无“lib”开头</p>
+<p>threading= mult : 支持多线程。 生成的库文件名称中包含 “-mt”</p>
+<p>variant=release  生成的库文件名称不包含 “-gd”</p>
+<p>variant= debug  生成的库文件名称包含 “-gd”</p>
+<p>runtime-link= static  生成的库文件名称包含 “-s”</p>
+<p>runtime-link= shared  生成的库文件名称不包含 “-s”</p>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">  --without-&lt;library&gt;     Do not build, stage, or install the specified
+                          &lt;library&gt;. By default, all libraries are built.</code></pre></div>
+<p>We can also use <code class="language-text">without</code> to exclude libraries to be compiled</p>
+<p>我们也可以使用 <code class="language-text">without</code> 排除要编译的库</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/d9f5d0b9ea97451706675b49a405cbc0/d67ca/TIM20200330121459.png"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 18.354430379746837%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAo0lEQVQY01VO1w7EMAzK/3/oDTWrzWg2Z/vah1pC2IBI1LZpWGsQYyS2yDnDOSf3cRwopWDOiTGG8Fr//QZrt99ah/LewzpPBQkhBBKbFKWUBL13KlmCSt5ZqhTwsNavIt5ZV2wE+k1M+QrhMXzPq9C4Ha+vfpSmfGIzXnKcUWftaNXh/f1A+4hKudIXyrgB4Uq8xwzjA+weYQicy2RoeoiZMz+byDh4KHpZkgAAAABJRU5ErkJggg=='); background-size: cover; display: block;"
+  ></span>
+  <img
+        class="gatsby-resp-image-image"
+        alt="I am a image"
+        title="I am a image"
+        src="/static/d9f5d0b9ea97451706675b49a405cbc0/f058b/TIM20200330121459.png"
+        srcset="/static/d9f5d0b9ea97451706675b49a405cbc0/c26ae/TIM20200330121459.png 158w,
+/static/d9f5d0b9ea97451706675b49a405cbc0/6bdcf/TIM20200330121459.png 315w,
+/static/d9f5d0b9ea97451706675b49a405cbc0/f058b/TIM20200330121459.png 630w,
+/static/d9f5d0b9ea97451706675b49a405cbc0/d67ca/TIM20200330121459.png 714w"
+        sizes="(max-width: 630px) 100vw, 630px"
+        style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+        loading="lazy"
+      />
+  </a>
+    </span></p>
+<p><code class="language-text">bin.v2</code> is an intermediate file generated by compilation, which can be deleted after compilation</p>
+<p><code class="language-text">bin.v2</code> 是编译产生的中间文件，编译完后可以删除</p>
+<p>You can also use <code class="language-text">--build-dir = DIR</code> to specify the output directory</p>
+<p>也可以使用 <code class="language-text">--build-dir=DIR</code> 指定输出目录</p>
+<p>编译特定版本，使用的参数</p>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">  toolset=toolset         Indicate the toolset to build with.
+
+  variant=debug|release   Select the build variant
+
+  link=static|shared      Whether to build static or shared libraries
+
+  threading=single|multi  Whether to build single or multithreaded binaries
+
+  runtime-link=static|shared
+                          Whether to link to static or shared C and C++
+                          runtime.</code></pre></div>
+<p>address-model: Add <code class="language-text">address-model=64</code> to compile 64-bit version
+添加 <code class="language-text">address-model=64</code> 来编译64位版本</p></section><hr/><footer><div class="bio"><div class="bio-avatar gatsby-image-wrapper" style="position:relative;overflow:hidden;display:inline-block;width:50px;height:50px"><img aria-hidden="true" src="data:image/png;base64,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" alt="aphage" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:1;transition-delay:500ms;border-radius:50%"/><noscript><picture><source srcset="/static/a49522a767cf10e8c842fc75a81022fb/318fd/profile-pic.png 1x,
+/static/a49522a767cf10e8c842fc75a81022fb/bed6f/profile-pic.png 1.5x,
+/static/a49522a767cf10e8c842fc75a81022fb/064bf/profile-pic.png 2x" /><img loading="lazy" width="50" height="50" srcset="/static/a49522a767cf10e8c842fc75a81022fb/318fd/profile-pic.png 1x,
+/static/a49522a767cf10e8c842fc75a81022fb/bed6f/profile-pic.png 1.5x,
+/static/a49522a767cf10e8c842fc75a81022fb/064bf/profile-pic.png 2x" src="/static/a49522a767cf10e8c842fc75a81022fb/318fd/profile-pic.png" alt="aphage" style="position:absolute;top:0;left:0;opacity:1;width:100%;height:100%;object-fit:cover;object-position:center"/></picture></noscript></div><p>Written by <strong>aphage</strong> <!-- -->哎嘿（●´∀｀）ノ♡ 我能达到上天的意志，LEVEL6吗~<!-- --> <a href="https://twitter.com/diyphage">You should follow them on Twitter</a></p></div></footer></article><nav class="blog-post-nav"><ul style="display:flex;flex-wrap:wrap;justify-content:space-between;list-style:none;padding:0"><li></li><li><a rel="next" href="/cplusplus-template-class-export/">c++ template class export<!-- --> →</a></li></ul></nav></main><footer>© <!-- -->2021<!-- -->, Built with<!-- --> <a href="https://www.gatsbyjs.com">Gatsby</a></footer><div><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-4EMLPCS7L0"></script><script async="" src="/gtag.js"></script></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/boost-build-for-vs2019/";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-7f1ec355261b605a652a.js"],"app":["/app-afb5732d42f98efb531b.js"],"component---src-pages-404-js":["/component---src-pages-404-js-994c3193491059bf8b6b.js"],"component---src-pages-index-js":["/component---src-pages-index-js-5143a6c272517200ccdd.js"],"component---src-pages-using-typescript-tsx":["/component---src-pages-using-typescript-tsx-811c8e0cf309df5e3046.js"],"component---src-templates-blog-post-js":["/component---src-templates-blog-post-js-9d982ded75bfbb0a31d5.js"]};/*]]>*/</script><script src="/polyfill-7f1ec355261b605a652a.js" nomodule=""></script><script src="/component---src-templates-blog-post-js-9d982ded75bfbb0a31d5.js" async=""></script><script src="/cd7d5f864fc9e15ed8adef086269b0aeff617554-fff156d3de3a9bb5caad.js" async=""></script><script src="/commons-6874860df7f66487eb60.js" async=""></script><script src="/app-afb5732d42f98efb531b.js" async=""></script><script src="/styles-755093da0c07f4b49226.js" async=""></script><script src="/framework-8e528b732ab2eaadb7b7.js" async=""></script><script src="/webpack-runtime-7d25764ea0bd56983ffd.js" async=""></script></body></html>

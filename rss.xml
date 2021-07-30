@@ -1,0 +1,1059 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Hi, aphage]]></title><description><![CDATA[咕噜灵波（●´∀｀）ノ♡ 我能达到上天的意志，LEVEL6吗~]]></description><link>https://aphage.me</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 30 Jul 2021 08:33:35 GMT</lastBuildDate><item><title><![CDATA[Wow64 Heaven's Gate(天堂之门) Hook]]></title><description><![CDATA[什么是 Wow64 Wow64 是让 64 位的 Windows 可以运行 Win32 程序的兼容层，在 64 位系统上运行的 32 位程序 本质是一个 64 位程序 在操作系统安装目录中  就是 32 位程序的 runtime（运行时）库， 则是 64 位程序 runtime…]]></description><link>https://aphage.me/Wow64-heaven&apos;s-gate-hook/</link><guid isPermaLink="false">https://aphage.me/Wow64-heaven&apos;s-gate-hook/</guid><pubDate>Sun, 25 Jul 2021 19:31:01 GMT</pubDate><content:encoded>&lt;h2&gt;什么是 Wow64&lt;/h2&gt;
+&lt;p&gt;Wow64 是让 64 位的 Windows 可以运行 Win32 程序的兼容层，在 64 位系统上运行的 32 位程序 本质是一个 64 位程序&lt;/p&gt;
+&lt;p&gt;在操作系统安装目录中 &lt;code class=&quot;language-text&quot;&gt;Windows/SysWOW64&lt;/code&gt; 就是 32 位程序的 runtime（运行时）库，&lt;code class=&quot;language-text&quot;&gt;Windows/System32&lt;/code&gt; 则是 64 位程序 runtime 库，在运行 Win32 程序时 &lt;code class=&quot;language-text&quot;&gt;Windows/System32&lt;/code&gt; 目录会被重定向到 &lt;code class=&quot;language-text&quot;&gt;Windows/SysWOW64&lt;/code&gt; 目录。&lt;/p&gt;
+&lt;h2&gt;Wow64 是怎么调用系统 API 的呢&lt;/h2&gt;
+&lt;p&gt;Wow64&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;77962C00 | B8 25000000              | mov eax,25                              | 25:&amp;#39;%&amp;#39;
+77962C05 | BA 50889777              | mov edx,ntdll.77978850                  |
+77962C0A | FFD2                     | call edx                                |
+77962C0C | C2 1400                  | ret 14                                  |&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;打开一个 Win32 程序，在 ntdll.dll 中可以看到是通过调用 edx 进行系统调用的，Win7 64 位应该是 &lt;code class=&quot;language-text&quot;&gt;call dword ptr fs:[0xC0]&lt;/code&gt; ，但是没关系他们都指向一个地方（是的没错，Wow 64 Gate 就保存在 &lt;code class=&quot;language-text&quot;&gt;fs:[0xC0]&lt;/code&gt; 中&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;7797884F | CC                       | int3                                    |
+77978850 | FF25 2892A177            | jmp dword ptr ds:[&amp;lt;Wow64Transition&amp;gt;]    |
+77978856 | CC                       | int3                                    |&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;可以看出字面意思 &lt;code class=&quot;language-text&quot;&gt;Wow64Transition&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;778E7000 | EA 09708E77 3300         | jmp far 33:778E7009                     |&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;这条指令将 cs 段选择器设置为 0x33，从 32 位切换到 64 位模式，并跳转&lt;/p&gt;
+&lt;p&gt;进入 Wow64 进行 API 翻译，之后通过调用指令进入内核，完成 API 调用&lt;/p&gt;
+&lt;h2&gt;Wow64 Heaven’s Gate(天堂之门) Hook&lt;/h2&gt;
+&lt;p&gt;现在我们知道 Wow64 Gate 地址保存在 &lt;code class=&quot;language-text&quot;&gt;fs:[0xC0]&lt;/code&gt; 中 ，在 TEB 结构中是 &lt;code class=&quot;language-text&quot;&gt;WOW32Reserved&lt;/code&gt; 成员&lt;/p&gt;
+&lt;p&gt;完成后&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/aphage/wow64-gate-hook&quot;&gt;https://github.com/aphage/wow64-gate-hook&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/1b0d98d0747091da13e48337d3bae144/c929c/procmon-view.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 57.59493670886076%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAABJ0AAASdAHeZh94AAACRUlEQVQozz1TaY+TUBTt//8dkzgxmrjFGD/YjImOo3FSoUApLaVsQwt0pRS6eLznts5LTt5237nbeZ04TpDNMhyPR+z3eyyXS6xWK2y3WxwOBzRNI2if7+q6RtseBO31rtE7zrvdDp0oilGUJTabjT4IggCLxQKVXK7Xaz3jXNd7cTxDURQoxb682lRVhY0458xAOlykaaqERZ4jjiL1xMGoGREdcJzPZz3LsgzDoQvP8+D7PkajkeyHiOMYHYbKBaOYSQRc04jGJCNM04Rt23pPwkicWpalJITrunAcB9PpFB3mzzpeCOcIw0ijZTSn00kJ1+vNc8Ss65NEOBgMhNRWx3TGKBPJVAlnTwl2mxUW+RxpHGHsuSjzGfD3hGNTIw4DFPMMB1nLoe4HtiV2Q7UlXMdCNA1I2MAaR/CSEk6QwfBCfH+00HMDREWFyWyN7v0j7h56sCcpkmWDvp/gpzkUuIoHYyCQmgbXGr775ePNY4q3gpffPNx+dfD6foRP/RwfzBzvfwf44hT4bOf4aJV49cPHTdfE7Z2FF1fcdC3c2+El5SJLcG53ONZbzNMI1aqUgjWaHk4N2t2lhpdxQv4kZXFtRTCSdC1D1yydEoaixZUUfik68icT0VqJs3C1h6NorRadVUrFfS0lmgRTmH0LBrvvDNDr/YFhmIiTK2Fy1SGFGYah6ozdZaf5I6hDdphdJxJ5SJmwu+y2YRgqI34KrSH1Q/1xHo/Hatjv95WY2qMO+YBE/CkTyYKE/8VMXfKOwfwDZ7N318F0E/sAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;I am a image&quot;
+        title=&quot;I am a image&quot;
+        src=&quot;/static/1b0d98d0747091da13e48337d3bae144/f058b/procmon-view.png&quot;
+        srcset=&quot;/static/1b0d98d0747091da13e48337d3bae144/c26ae/procmon-view.png 158w,
+/static/1b0d98d0747091da13e48337d3bae144/6bdcf/procmon-view.png 315w,
+/static/1b0d98d0747091da13e48337d3bae144/f058b/procmon-view.png 630w,
+/static/1b0d98d0747091da13e48337d3bae144/40601/procmon-view.png 945w,
+/static/1b0d98d0747091da13e48337d3bae144/c929c/procmon-view.png 1218w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h2&gt;资料&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/WoW64&quot;&gt;WoW64 WiKi&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://rce.co/knockin-on-heavens-gate-dynamic-processor-mode-switching/&quot;&gt;Knockin’ on Heaven’s Gate – Dynamic Processor Mode Switching&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.fireeye.com/blog/threat-research/2020/11/wow64-subsystem-internals-and-hooking-techniques.html&quot;&gt;WOW64!Hooks: WOW64 Subsystem Internals and Hooking Techniques&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/zh-hans/%E7%BA%BF%E7%A8%8B%E4%BF%A1%E6%81%AF%E5%9D%97&quot;&gt;线程信息块&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Arch Linux Installation]]></title><description><![CDATA[官方安装教程 参考1 参考2 分区 键盘布局 控制台键盘布局默认为 us（美式键盘映射）。列出所有可用的键盘布局，可以使用： 如果您想要更改键盘布局，可以将一致的文件名添加进 loadkeys(1)，但请省略路径和扩展名。比如，要添加 German 键盘布局：]]></description><link>https://aphage.me/arch-linux-installation/</link><guid isPermaLink="false">https://aphage.me/arch-linux-installation/</guid><pubDate>Mon, 07 Dec 2020 21:20:01 GMT</pubDate><content:encoded>&lt;p&gt;&lt;a href=&quot;https://wiki.archlinux.org/index.php/Installation_guide_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)&quot;&gt;官方安装教程&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://blog.yoitsu.moe/arch-linux/installing_arch_linux_for_complete_newbies.html&quot;&gt;参考1&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://shenyu.me/2020/04/11/arch-uefi-install.html&quot;&gt;参考2&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://wiki.archlinux.org/index.php/Partitioning_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)#%E9%80%89%E6%8B%A9_GPT_%E8%BF%98%E6%98%AF_MBR&quot;&gt;分区&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;键盘布局&lt;/h2&gt;
+&lt;p&gt;控制台键盘布局默认为 us（美式键盘映射）。列出所有可用的键盘布局，可以使用：&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token function&quot;&gt;ls&lt;/span&gt; /usr/share/kbd/keymaps/**/*.map.gz&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;如果您想要更改键盘布局，可以将一致的文件名添加进 loadkeys(1)，但请省略路径和扩展名。比如，要添加 German 键盘布局：&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;loadkeys de-latin1&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[使用Vcpkg进行包管理]]></title><description><![CDATA[安装 妈妈再也不用担心我编译openssl、boost了 官网 https://docs.microsoft.com/en-us/cpp/build/vcpkg?view=vs-2019 https://github.com/microsoft/vcpkg…]]></description><link>https://aphage.me/use-vcpkg/use-vcpkg/</link><guid isPermaLink="false">https://aphage.me/use-vcpkg/use-vcpkg/</guid><pubDate>Wed, 29 Apr 2020 19:31:01 GMT</pubDate><content:encoded>&lt;h2&gt;安装&lt;/h2&gt;
+&lt;p&gt;妈妈再也不用担心我编译openssl、boost了&lt;/p&gt;
+&lt;p&gt;官网&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://docs.microsoft.com/en-us/cpp/build/vcpkg?view=vs-2019&quot;&gt;https://docs.microsoft.com/en-us/cpp/build/vcpkg?view=vs-2019&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/microsoft/vcpkg&quot;&gt;https://github.com/microsoft/vcpkg&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; clone https://github.com/Microsoft/vcpkg.git
+&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token builtin class-name&quot;&gt;cd&lt;/span&gt; vcpkg
+
+PS&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; .&lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;bootstrap-vcpkg.bat
+Linux:~/$ ./bootstrap-vcpkg.sh&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;根据官网提示，我执行了上面的命令，然后报错了！&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;error MSB8040: Spectre-mitigated libraries are required for this project&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;因为我没有安装 &lt;code class=&quot;language-text&quot;&gt;Spectre&lt;/code&gt; 漏洞缓解解决方案，我不想安装&lt;/p&gt;
+&lt;p&gt;发现可以手动修改项目属性，打开 &lt;code class=&quot;language-text&quot;&gt;vcpkg\toolsrc\vcpkg.sln&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;右键项目属性&lt;/p&gt;
+&lt;p&gt;配置：所有配置  平台：所有平台&lt;/p&gt;
+&lt;p&gt;C/C++：代码生成：Spectre 缓解：已禁用&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/6bf6fbab5302e2c02dccfba67f34ad32/72aae/TIM20200429194629.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 60.12658227848101%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAAsTAAALEwEAmpwYAAACDklEQVQoz3VT2ZKiQBD0/z/IV8On1VVn8EARBUHu+xI8EHOr2nFiYmanIgrsbjorKyvtHQ4HGLqJt9kSpp/ACjORdpRTFrBcH87xCGUygblV4fq0tm04jgPbduB5HmRZxoTOdV1HT9MPWPwZIVyukBcFgjCCF8RYrbdQVA1xVqKIEqSygpQAqrpG0zRf8oyC7qVpirKs0EuSBBtFwel8xuVyEZVdL8RqJWM+n6OhfY4HJbPL8wK/Rfd4ECAhm4aBwA9wpssC0A+x3mygaRra+x0P+pAe1KIF/WA8C9D6e7btHb3T6QTLOiKKI9xuNziuC8+PiN2C2OSflzlYI0XZ4kRtd903QDq/U/Ge58WQJBmj8Ru1mmCvGfCDCNPpFKqqiqofeGB5TPOI6/X6k+ELsCAhNxuFKquo6wZHyxaAzPBdekdFHbzCJfZRHP+33U9AntRO3UJer58tk4Z+wKwlYYtXu/xMsgwpJbf8E/QDkDXc7VQYNJgXoOMFwluLxRJZlovpX683JMTwTGBiol0ndOTJvvRs2/ZpG7YHA9X0MbPKixK18Fgt2ARhiFNV4UIG72j/t3gI2xCgLK+I5U4Ym3VitqZpiimzlRoC5U5qYsoFKgIvy1Kc85uNzclrASiR+DxR3sxIo/lcQr/fx2AwwGw2I5OvMB7/xZT+XsPhEKPRCGvSfL/fi8L8ZkL8+x86F4fnVYd0SwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;I am a image&quot;
+        title=&quot;I am a image&quot;
+        src=&quot;/static/6bf6fbab5302e2c02dccfba67f34ad32/f058b/TIM20200429194629.png&quot;
+        srcset=&quot;/static/6bf6fbab5302e2c02dccfba67f34ad32/c26ae/TIM20200429194629.png 158w,
+/static/6bf6fbab5302e2c02dccfba67f34ad32/6bdcf/TIM20200429194629.png 315w,
+/static/6bf6fbab5302e2c02dccfba67f34ad32/f058b/TIM20200429194629.png 630w,
+/static/6bf6fbab5302e2c02dccfba67f34ad32/40601/TIM20200429194629.png 945w,
+/static/6bf6fbab5302e2c02dccfba67f34ad32/72aae/TIM20200429194629.png 964w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;把里面的项目都改一遍，然后保存退出&lt;/p&gt;
+&lt;p&gt;重新执行&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;PS&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; .&lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;bootstrap-vcpkg.bat&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;OK，获得 &lt;code class=&quot;language-text&quot;&gt;vcpkg.exe&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;PS &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; .&lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;vcpkg.exe search boost
+autobahn             &lt;span class=&quot;token number&quot;&gt;18.4&lt;/span&gt;.1           WAMP &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; C++ &lt;span class=&quot;token keyword&quot;&gt;in&lt;/span&gt; Boost/Asio
+azmq                 &lt;span class=&quot;token number&quot;&gt;2020&lt;/span&gt;-03-03       Boost Asio style bindings &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; ZeroMQ This library is built on &lt;span class=&quot;token function&quot;&gt;top&lt;/span&gt; of ZeroMQ&apos;s &lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;.
+beast                &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;                HTTP/1 and WebSocket, header-only using Boost.Asio and C++11
+boost                &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Peer-reviewed portable C++ &lt;span class=&quot;token builtin class-name&quot;&gt;source&lt;/span&gt; libraries
+boost&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;mpi&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;                            Build with MPI support
+boost-accumulators   &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost accumulators module
+boost-algorithm      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost algorithm module
+boost-align          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost align module
+boost-any            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost any module
+boost-array          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost array module
+boost-asio           &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost asio module
+boost-assert         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost assert module
+boost-assign         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost assign module
+boost-atomic         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost atomic module
+boost-beast          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost beast module
+boost-bimap          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost bimap module
+boost-bind           &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost &lt;span class=&quot;token builtin class-name&quot;&gt;bind&lt;/span&gt; module
+boost-build          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost.Build
+boost-callable-tr&lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;. &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost callable_traits module
+boost-chrono         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost chrono module
+boost-circular-bu&lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;. &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost circular_buffer module
+boost-compatibility  &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost compatibility module
+boost-compute        &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost compute module
+boost-concept-check  &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost concept_check module
+boost-config         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost config module
+boost-container      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost container module
+boost-container-hash &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost container_hash module
+boost-context        &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost context module
+boost-contract       &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost contract module
+boost-conversion     &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost conversion module
+boost-convert        &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost convert module
+boost-core           &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost core module
+boost-coroutine      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost coroutine module
+boost-coroutine2     &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost coroutine2 module
+boost-crc            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost crc module
+boost-date-time      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost date_time module
+boost-detail         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost detail module
+boost-di             &lt;span class=&quot;token number&quot;&gt;1.1&lt;/span&gt;.0-1          C++14 Dependency Injection Library.
+boost-disjoint-sets  &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost disjoint_sets module
+boost-dll            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost dll module
+boost-dynamic-bitset &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost dynamic_bitset module
+boost-endian         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost endian module
+boost-exception      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost exception module
+boost-fiber          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost fiber module
+boost-filesystem     &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost filesystem module
+boost-flyweight      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost flyweight module
+boost-foreach        &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost foreach module
+boost-format         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost &lt;span class=&quot;token function&quot;&gt;format&lt;/span&gt; module
+boost-function       &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; module
+boost-function-types &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost function_types module
+boost-functional     &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost functional module
+boost-fusion         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost fusion module
+boost-geometry       &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost geometry module
+boost-gil            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost gil module
+boost-graph          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost graph module
+boost-graph-parallel &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost graph_parallel module
+boost-hana           &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost hana module
+boost-heap           &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost heap module
+boost-histogram      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost histogram module
+boost-hof            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost hof module
+boost-icl            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost icl module
+boost-integer        &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost integer module
+boost-interprocess   &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost interprocess module
+boost-interval       &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost interval module
+boost-intrusive      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost intrusive module
+boost-io             &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost io module
+boost-iostreams      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0-1         Boost iostreams module
+boost-iterator       &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost iterator module
+boost-lambda         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost lambda module
+boost-lexical-cast   &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost lexical_cast module
+boost-local-function &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost local_function module
+boost-locale         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost locale module
+boost-locale&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;icu&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;                     ICU backend &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; Boost.Locale
+boost-lockfree       &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost lockfree module
+boost-log            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost log module
+boost-logic          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost logic module
+boost-math           &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost math module
+boost-metaparse      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost metaparse module
+boost-modular-bui&lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;. &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0-2
+boost-move           &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost move module
+boost-mp11           &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost mp11 module
+boost-mpi            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost mpi module
+boost-mpl            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost mpl module
+boost-msm            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost msm module
+boost-multi-array    &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost multi_array module
+boost-multi-index    &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost multi_index module
+boost-multiprecision &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost multiprecision module
+boost-numeric-con&lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;. &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost numeric_conversion module
+boost-odeint         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost odeint module
+boost-optional       &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost optional module
+boost-outcome        &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost outcome module
+boost-parameter      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost parameter module
+boost-parameter-p&lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;. &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost parameter_python module
+boost-phoenix        &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost phoenix module
+boost-poly-collec&lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;. &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost poly_collection module
+boost-polygon        &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost polygon module
+boost-pool           &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost pool module
+boost-predef         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost predef module
+boost-preprocessor   &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost preprocessor module
+boost-process        &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0-1         Boost process module
+boost-program-opt&lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;. &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost program_options module
+boost-property-map   &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost property_map module
+boost-property-tree  &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost property_tree module
+boost-proto          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost proto module
+boost-ptr-container  &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost ptr_container module
+boost-python         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0-1         Boost python module
+boost-qvm            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost qvm module
+boost-random         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost random module
+boost-range          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost range module
+boost-ratio          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost ratio module
+boost-rational       &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost rational module
+boost-regex          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost regex module
+boost-regex&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;icu&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;                      ICU backend &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; Boost.Regex
+boost-safe-numerics  &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost safe_numerics module
+boost-scope-exit     &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost scope_exit module
+boost-serialization  &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost serialization module
+boost-signals        &lt;span class=&quot;token number&quot;&gt;1.68&lt;/span&gt;.0-1         Boost signals module
+boost-signals2       &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost signals2 module
+boost-smart-ptr      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost smart_ptr module
+boost-sort           &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost &lt;span class=&quot;token function&quot;&gt;sort&lt;/span&gt; module
+boost-spirit         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost spirit module
+boost-stacktrace     &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost stacktrace module
+boost-statechart     &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost statechart module
+boost-static-assert  &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost static_assert module
+boost-system         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost system module
+boost-test           &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost &lt;span class=&quot;token builtin class-name&quot;&gt;test&lt;/span&gt; module
+boost-thread         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost thread module
+boost-throw-excep&lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;. &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost throw_exception module
+boost-timer          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost timer module
+boost-tokenizer      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost tokenizer module
+boost-tti            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost tti module
+boost-tuple          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost tuple module
+boost-type-erasure   &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost type_erasure module
+boost-type-index     &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost type_index module
+boost-type-traits    &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost type_traits module
+boost-typeof         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost typeof module
+boost-ublas          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost ublas module
+boost-units          &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost &lt;span class=&quot;token function&quot;&gt;units&lt;/span&gt; module
+boost-unordered      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost unordered module
+boost-utility        &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost utility module
+boost-uuid           &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost uuid module
+boost-variant        &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost variant module
+boost-variant2       &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost variant2 module
+boost-vcpkg-helpers  &lt;span class=&quot;token number&quot;&gt;7&lt;/span&gt;                a &lt;span class=&quot;token builtin class-name&quot;&gt;set&lt;/span&gt; of vcpkg-internal scripts used to modularize boost
+boost-vmd            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost vmd module
+boost-wave           &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost wave module
+boost-winapi         &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost winapi module
+boost-xpressive      &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost xpressive module
+boost-yap            &lt;span class=&quot;token number&quot;&gt;1.72&lt;/span&gt;.0           Boost yap module
+json-spirit          &lt;span class=&quot;token number&quot;&gt;4.1&lt;/span&gt;.0-1          json parser using boost library
+libodb-boost         &lt;span class=&quot;token number&quot;&gt;2.4&lt;/span&gt;.0-3          Description: Boost support &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; the ODB ORM library
+mongo-cxx-driver&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;boost&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;               Use Boost C++17 polyfill. The only option under MSVC.
+mqtt-cpp             &lt;span class=&quot;token number&quot;&gt;7.0&lt;/span&gt;.1-2          Header-only MQTT client/server &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; C++14 based on Boost.Asio.
+outcome              &lt;span class=&quot;token number&quot;&gt;2.1&lt;/span&gt;              Provides very lightweight outcome&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;T&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; and result&lt;span class=&quot;token operator&quot;&gt;&amp;lt;&lt;/span&gt;T&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;non-Boost edition&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+soci&lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt;boost&lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;                           Integration with Boost
+spirit-po            &lt;span class=&quot;token number&quot;&gt;1.1&lt;/span&gt;.2-1          A header-only C++ library &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; localization using GNU gettext po files, based o&lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;.
+trompeloeil          &lt;span class=&quot;token number&quot;&gt;36&lt;/span&gt;               A thread-safe header-only mocking framework &lt;span class=&quot;token keyword&quot;&gt;for&lt;/span&gt; C++11/14 using the Boost Softw&lt;span class=&quot;token punctuation&quot;&gt;..&lt;/span&gt;.
+
+If your library is not listed, please &lt;span class=&quot;token function&quot;&gt;open&lt;/span&gt; an issue at and/or consider making a pull request:
+    https://github.com/Microsoft/vcpkg/issues&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Nice!&lt;/p&gt;
+&lt;p&gt;安装个 &lt;code class=&quot;language-text&quot;&gt;boost-timer&lt;/code&gt; 试一试&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;PS &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; .&lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;vcpkg.exe &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; boost-timer&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;注意，如果你在天朝，执行可能会失败&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/microsoft/vcpkg/issues/11040&quot;&gt;https://github.com/microsoft/vcpkg/issues/11040&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;已经有小伙伴弄了一个天朝版的了&lt;/p&gt;
+&lt;p&gt;我选择使用代理&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;PS &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token builtin class-name&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;http_proxy&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;http://127.0.0.1:1080
+PS &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; &lt;span class=&quot;token builtin class-name&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;token assign-left variable&quot;&gt;https_proxy&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;http://127.0.0.1:1080&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然后重新安装，又失败了，提示&lt;code class=&quot;language-text&quot;&gt;安装英文语言包&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;继续执行&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;PS &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; .&lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;vcpkg.exe &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; boost-timer&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;OK，唉嘿嘿，起飞~&lt;/p&gt;
+&lt;h2&gt;使用&lt;/h2&gt;
+&lt;p&gt;Then, to hook up user-wide integration, run (note: requires admin on first use)&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;PS&lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; .&lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;vcpkg integrate &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt;
+Linux:~/$ ./vcpkg integrate &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;官方推荐使用全局引用&lt;/p&gt;
+&lt;p&gt;如果你不想用这种可以移除&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;PS &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; .&lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;vcpkg integrate remove&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;其他方式官方也都给出来了&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/microsoft/vcpkg/blob/master/docs/users/integration.md&quot;&gt;https://github.com/microsoft/vcpkg/blob/master/docs/users/integration.md&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;我使用 &lt;code class=&quot;language-text&quot;&gt;NuGet&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;PS &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; .&lt;span class=&quot;token punctuation&quot;&gt;\&lt;/span&gt;vcpkg integrate project&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;会在 &lt;code class=&quot;language-text&quot;&gt;\scripts\buildsystems&lt;/code&gt; 目录下，生成nuget配置文件&lt;/p&gt;
+&lt;p&gt;打开Visual Studio，点击菜单“工具-&gt;NuGet包管理器-&gt;程序包管理器设置”，进入设置界面，点击“程序包源”。&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/46fa50500c9870e1f1d4810766fd2ae4/906b5/TIM20200429202018.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 60.12658227848101%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAAsTAAALEwEAmpwYAAACUElEQVQoz41Ty27TUBD1PwKCRWEBX8OeFYtWhMIOJLoDqUIVj6iKRFM77zjxM7Hj+O34ESf1YeYmqgQLxJWO53o8Pj5zz1gyTRN5nqMsS1RVdcQWRVEgTTOEUYyEYpYXyDb5AfkBG8pFmw2iOEEQRhRjSLZtQ9N0uCsPOZFs6IWcCrnAXZgwpgNEKxuoc6DKgC2hStHwvkiQydeIZkPEno3QW0LSNA2dTgemZQmVWZYJ0iQK0B5aOPs6xtmVivO2iXeE1g8DH7o+LvoxPikhLrprXMgBPioRvo09SPPZDKPRCEmSUospxUS0Fbg2Xn0Z4fnbEV60+jg5lfGU8Izw6LWMB6cTPH6j4sm5hpP3Oh62dLz8rEHSdQOKokDXdfi+D9d1kdBZcL7IUuzyGNs0QJ0FxxiijDw0ZSoA7HC/9hUkNmUwHGIymQgT2AxunT9QUOTVHOubv/Z3zQF7unDMixKSqur42e7gptvDXLNh2SvYizV9QCXiQrx8R9VN82/wYiHSfK5Ryz202230+gOhckOjwPnyqPB/lyBkl2dkDLcehiHNYIm6rmGR60y8o3293WK/3/+BerdDRXmu3dE9a+Sxk/jsxuOxMMRfrwXRcrlETMb0+32MVRWqYdCcruA6Szj0zFkskFB9RUcSR6HIqTQpruNAYld5uB3HvXfZ8zxBGJDimJRHgwH8noJAkQkKQvkW4WCIhevDINj0Y8wvL+FOp5C4XSbklhmskGGQKtO0YE6mMInQJKUmOc/g5xPdwtX1Db53btEbTfGr2xXz/Buxy3hXG8cmbgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;I am a image&quot;
+        title=&quot;I am a image&quot;
+        src=&quot;/static/46fa50500c9870e1f1d4810766fd2ae4/f058b/TIM20200429202018.png&quot;
+        srcset=&quot;/static/46fa50500c9870e1f1d4810766fd2ae4/c26ae/TIM20200429202018.png 158w,
+/static/46fa50500c9870e1f1d4810766fd2ae4/6bdcf/TIM20200429202018.png 315w,
+/static/46fa50500c9870e1f1d4810766fd2ae4/f058b/TIM20200429202018.png 630w,
+/static/46fa50500c9870e1f1d4810766fd2ae4/40601/TIM20200429202018.png 945w,
+/static/46fa50500c9870e1f1d4810766fd2ae4/906b5/TIM20200429202018.png 950w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;点击“加号”增加一个源。修改源的名字为vcpkg。在“源”的选项中点击右侧的”…”选择vcpkg目录下的“scripts\buildsystems”目录，然后点击右侧的“更新按钮”。&lt;/p&gt;
+&lt;p&gt;点击“确定”，关闭设置对话框。&lt;/p&gt;
+&lt;p&gt;到此，全局性的设置已经完成，以后不必再重复设置了。&lt;/p&gt;
+&lt;p&gt;用Visual Studio 打开一个工程或解决方案。右键点击需要设置的工程，选择“管理NuGet程序包”。在右上角的“程序包源”中选择刚刚设置的“vcpkg”。这样在“浏览”选项卡中就可以看到“vcpkg.E.Repos.vcpkg”。点击最右侧的“安装”。这样就可以集成到某个工程了。&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/20492f50566bc8397b3451c89aabcb49/2ed34/TIM20200429202159.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 34.177215189873415%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAABG0lEQVQoz3VR2W7CMBDMr0AqILUT305MjoJoFETV/gf//wHTXbcg9eBhtPesPVvs3q+oPq5w44LY9rCxR61DhmjcHziqT4cZ7XCA60YM4xHzvGCfhjxfxBARjYa3AVo7GBMQQgdHcV1rNI2GUobyjnyy1BNjh6UfcfIRfdfjfL5QLsFajyLNb1iWC17nM6bpiI4aUuqzZWJewvDk8wJJEKKBylBQtcTLNFK+QVVVKKSo8+YblLJEYLPlmEkYzkVIqTLuxJLJBdVcJtxstihy8bvxEb4I27t/m2G73eywXq2wXpcoyyd6IRX4C/+R3MAv9f4BodAon03WWQhJRyExE1+IhG7bfQbrZ4z/IYOlI/1exHFoB1ifcj9r/QnV/d1Tp90QJAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;I am a image&quot;
+        title=&quot;I am a image&quot;
+        src=&quot;/static/20492f50566bc8397b3451c89aabcb49/f058b/TIM20200429202159.png&quot;
+        srcset=&quot;/static/20492f50566bc8397b3451c89aabcb49/c26ae/TIM20200429202159.png 158w,
+/static/20492f50566bc8397b3451c89aabcb49/6bdcf/TIM20200429202159.png 315w,
+/static/20492f50566bc8397b3451c89aabcb49/f058b/TIM20200429202159.png 630w,
+/static/20492f50566bc8397b3451c89aabcb49/40601/TIM20200429202159.png 945w,
+/static/20492f50566bc8397b3451c89aabcb49/78612/TIM20200429202159.png 1260w,
+/static/20492f50566bc8397b3451c89aabcb49/2ed34/TIM20200429202159.png 1776w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;OK，跑一下Boost timer的官方例子&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;c++&quot;&gt;&lt;pre class=&quot;language-c++&quot;&gt;&lt;code class=&quot;language-c++&quot;&gt;//  auto_cpu_timer_example.cpp  ------------------------------------------------------//
+
+//  Copyright Beman Dawes 2006
+
+//  Distributed under the Boost Software License, Version 1.0.
+//  See http://www.boost.org/LICENSE_1_0.txt
+
+#include &amp;lt;boost/timer/timer.hpp&amp;gt;
+#include &amp;lt;cmath&amp;gt;
+
+int main()
+{
+  boost::timer::auto_cpu_timer t;
+
+  for ( long i = 0; i &amp;lt; 100000000; ++i )
+    std::sqrt( 123.456L );  // burn some time
+
+  return 0;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/89e92a18948d1267e46cff3c72517de1/4719e/TIM20200429202610.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 31.645569620253163%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA8ElEQVQY05XQvW6DMBQFYGCEBam1IUqQY5sfp1OHSp2qEKBSHicREihAi3jy0xsPaZe06vDpXi9H99gRWwmhtpDFlbQ2YoMo5ohWkcUjDs4Z4WCM/coRUkKlCipPkZkdVJbj+eUV78cjqrrCoTqg3Jeo64bUVtN87z/f10mBCnlhsDMFijRFsl5j/1bichlwPp3IGW3bYhgGLMuCaZowjiPmecYnmT4m9H1vdV1HgUojzynMGLouQ/ZkEK9i+L6PIAjgeR4cx7Fc173tdwmtoTXVpao61cio+iN7uAX8F12oIOkfhRBIksTOMAz/vuSOL2jwqQs/ieWeAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;I am a image&quot;
+        title=&quot;I am a image&quot;
+        src=&quot;/static/89e92a18948d1267e46cff3c72517de1/f058b/TIM20200429202610.png&quot;
+        srcset=&quot;/static/89e92a18948d1267e46cff3c72517de1/c26ae/TIM20200429202610.png 158w,
+/static/89e92a18948d1267e46cff3c72517de1/6bdcf/TIM20200429202610.png 315w,
+/static/89e92a18948d1267e46cff3c72517de1/f058b/TIM20200429202610.png 630w,
+/static/89e92a18948d1267e46cff3c72517de1/40601/TIM20200429202610.png 945w,
+/static/89e92a18948d1267e46cff3c72517de1/78612/TIM20200429202610.png 1260w,
+/static/89e92a18948d1267e46cff3c72517de1/4719e/TIM20200429202610.png 1330w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;注意：这里只安装了 &lt;code class=&quot;language-text&quot;&gt;x86-windows&lt;/code&gt; 架构版本&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;boost-timer:x86-windows                            1.72.0           Boost timer module&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;执行下面命令，可以查看支持的架构&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;PS &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; ./vcpkg &lt;span class=&quot;token builtin class-name&quot;&gt;help&lt;/span&gt; triplet
+Available architecture triplets
+VCPKG built-in triplets:
+  arm-uwp
+  arm64-windows
+  x64-linux
+  x64-osx
+  x64-uwp
+  x64-windows-static
+  x64-windows
+  x86-windows
+
+VCPKG community triplets:
+  arm-ios
+  arm-mingw
+  arm-windows
+  arm64-ios
+  arm64-mingw
+  arm64-uwp
+  x64-ios
+  x64-mingw
+  x64-osx-dynamic
+  x64-windows-static-md
+  x86-ios
+  x86-mingw
+  x86-uwp
+  x86-windows-static-md
+  x86-windows-static&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;参考: &lt;a href=&quot;https://blog.csdn.net/cjmqas/article/details/79282847&quot;&gt;https://blog.csdn.net/cjmqas/article/details/79282847&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[vs生成shellcode设置]]></title><link>https://aphage.me/vs-build-shellcode-settings/</link><guid isPermaLink="false">https://aphage.me/vs-build-shellcode-settings/</guid><pubDate>Sun, 05 Apr 2020 21:00:00 GMT</pubDate><content:encoded>&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;* 表示可选&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;config&quot;&gt;&lt;pre class=&quot;language-config&quot;&gt;&lt;code class=&quot;language-config&quot;&gt;C/C++
+  |-常规
+  |  |-调试信息格式: 程序数据库(/Zi)
+  |  |-支持仅我的代码调试: 否
+  |  |-*SDL 检查: 是 (/sdl)
+  |-优化
+  |  |-优化: 已禁用(/Od)
+  |  |-*内联函数扩展: 任何适用项(/Ob2)
+  |  |-*启用内部函数: 是(/Oi)
+  |  |-*优选大小或速度: 代码大小优先 (/Os)
+  |  |-*全程序优化: 是 (/GL)
+  |-代码生成
+  |  |-运行时检查: 默认值
+  |  |-安全检查: 禁用安全检查 (/GS-)
+  |  |-启用函数级链接: 是 (/Gy)
+  |  |-Spectre 缓解: 已禁用
+连接器
+  |-常规
+  |  |-启用增量链接: 否 (/INCREMENTAL:NO)
+  |-调试
+  |  |-*生成映射文件: 是	//需要用来查看生成的函数名请选择: 是
+  |  |-*映射导出: 是		//需要用来查看生成的函数名请选择: 是
+  |-优化
+  |  |-引用: 否 (/OPT:NOREF)
+  |  |-*启用 COMDAT 折叠: 是 (/OPT:ICF)
+  |  |-函数顺序: 			//不知道函数名可以在选择生成映射文件
+  |  |-链接时间代码生成: 默认设置
+  |-高级
+  |  |-随机基质: 否 (/DYNAMICBASE:NO)
+  |  |-*数据执行保护: 否 (/NXCOMPAT:NO)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[boost build for vs2019]]></title><description><![CDATA[Download for boost 下载 boost Open the link: https://www.boost.org/ 打开链接：https://www.boost.org/ Download page: https://www.boost.org/users…]]></description><link>https://aphage.me/boost-build-for-vs2019/</link><guid isPermaLink="false">https://aphage.me/boost-build-for-vs2019/</guid><pubDate>Sun, 29 Mar 2020 21:20:46 GMT</pubDate><content:encoded>&lt;p&gt;Download for boost&lt;/p&gt;
+&lt;p&gt;下载 boost&lt;/p&gt;
+&lt;p&gt;Open the link: &lt;a href=&quot;https://www.boost.org/&quot;&gt;https://www.boost.org/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;打开链接：&lt;a href=&quot;https://www.boost.org/&quot;&gt;https://www.boost.org/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Download page: &lt;a href=&quot;https://www.boost.org/users/download/&quot;&gt;https://www.boost.org/users/download/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;下载页面：&lt;a href=&quot;https://www.boost.org/users/download/&quot;&gt;https://www.boost.org/users/download/&lt;/a&gt;&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;p&gt;Now, boost version is 1.72.0&lt;/p&gt;
+&lt;p&gt;现在的boost版本是1.72.0&lt;/p&gt;
+&lt;p&gt;Download file: &lt;a href=&quot;https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.zip&quot;&gt;https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.zip&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;下载文件：&lt;a href=&quot;https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.zip&quot;&gt;https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.zip&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Tip: Forbidden!&lt;/p&gt;
+&lt;p&gt;提示：Forbidden!&lt;/p&gt;
+&lt;p&gt;Previously boost was saved on sourceforge&lt;/p&gt;
+&lt;p&gt;以前boost是保存在上sourceforge的&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/c59b74fd50bdf0c5963d52fe899b315d/7161f/TIM20200329221932.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 77.21518987341771%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAAByUlEQVQ4y6VUa5ObMAz0//+DSS595EKIIYBfYJtntpLh8iHXtL0pMzsrhEe2tGvEOI7QroOyHbS1UFpDG5vg2g6xHxBij9D/G8Sy3JFVFpfaguPn536/fwnCOYfqdkNLvBbAfz3CGIOqqtC2LWKMmOcZC2Gapt/j07cx8bzlhQ8BtdJQNLOG5qe0STFvwOi6D+6IHbF/yrWpO+/XvBhIFOcD+nHCMM4YJsby19bWmX2es7jmOU4/T6Roi6puaMcO1hrwKCypfj6/4+14RNM0KcfgU70UpSwLHL//gGws8krjcpXY7XY4vB1wOOxTvN/vKaZ3Yo6zLHvpAGFpx4JU1l2EC32aiywkCkJZlrjRN+aiKCClTFzX9WuVtVKQ1xwlLfQdG7lH/wRWn3kYhkcukJiB8iwGx7yGWTSNwnt2wfmSo1EmFUyLQ3wsjBv3H3jabN1wzYtAV6txHrX1sI6skOziHpb4qs9Ty6y0lNdUbODWyEI92Se1Ty1F6wgtvLYY6V7/sSBfu2+kckZtsyX09nMwVMSQbSwJYslW+nSCIW7pPcSwGpngE8LGHoLb0lshRafVfFOoGA98ItPzaUe6ViNfs2VlFucVfgGEcIm63JuQTgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;I am a image&quot;
+        title=&quot;I am a image&quot;
+        src=&quot;/static/c59b74fd50bdf0c5963d52fe899b315d/f058b/TIM20200329221932.png&quot;
+        srcset=&quot;/static/c59b74fd50bdf0c5963d52fe899b315d/c26ae/TIM20200329221932.png 158w,
+/static/c59b74fd50bdf0c5963d52fe899b315d/6bdcf/TIM20200329221932.png 315w,
+/static/c59b74fd50bdf0c5963d52fe899b315d/f058b/TIM20200329221932.png 630w,
+/static/c59b74fd50bdf0c5963d52fe899b315d/40601/TIM20200329221932.png 945w,
+/static/c59b74fd50bdf0c5963d52fe899b315d/7161f/TIM20200329221932.png 1182w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Open the this link&lt;/p&gt;
+&lt;p&gt;打开这个连接&lt;/p&gt;
+&lt;p&gt;Open the boost directory&lt;/p&gt;
+&lt;p&gt;打开 boost 目录&lt;/p&gt;
+&lt;p&gt;Find the required version and download&lt;/p&gt;
+&lt;p&gt;找到需要的版本然后下载&lt;/p&gt;
+&lt;p&gt;Tip: The boost-binaries directory is a compiled boost version&lt;/p&gt;
+&lt;p&gt;提示：boost-binaries目录是已经编译过的boost版本&lt;/p&gt;
+&lt;p&gt;Unzip it now&lt;/p&gt;
+&lt;p&gt;现在解压它&lt;/p&gt;
+&lt;p&gt;Open x64 Native Tools Command Prompt for VS 2019&lt;/p&gt;
+&lt;p&gt;打开 x64 Native Tools Command Prompt for VS 2019&lt;/p&gt;
+&lt;p&gt;Tip: &lt;code class=&quot;language-text&quot;&gt;x86_x64 Cross Tools Command Prompt for VS 2019&lt;/code&gt; Can compile 64-bit programs on x86&lt;/p&gt;
+&lt;p&gt;提示: &lt;code class=&quot;language-text&quot;&gt;x86_x64 Cross Tools Command Prompt for VS 2019&lt;/code&gt; 可以让x86编译出x64程序&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 388px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/d821e7f9a83e78d42d67389f45c05b58/96c67/TIM20200330113811.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 108.22784810126582%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAWCAYAAADAQbwGAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEvklEQVQ4y1VVyY4bVRT1byDBikWUtNMd2zXPVbbL5Xkoj12eOrbbcSdkgnQEaZIWQYrYEgUhBdggkQ2sWbBlxefwA4fzyhCSxdV9fs/vvDuccyuj6CZuyCaakYrfvsnj1eMbcLwAlh/B9EI4xSqCsA7bD1Gs1GB7Rai8oxsWDMNMzbQdOFoB2eoSGcPQkZMMjJt5/P3XCr+/NDGIGzjbrbCcTzCfzzCaTNFqd+mPEUZVqJr+FkyY7XhwdQXZMEHGNDXIioZ2pOCPlxLePPsYy6GHxTjEySRELbRRkJUURBZe1aDrRgokvMZ93TC41mG7vohQgwBV5BzOb7fw4tsfcGvmYTCaIpnOMF8ssdlscHx8TEuwXJ4w6gWmPJvNZlit1mg0mnxIRbFYYoQpIF9RjnB5Psbrn77D+VrHbsm0Txr4ZNNB4DvQdJGmAcuyYLNm2r9pu64Hg5EqqoFKoO0BLVNNX7jYqnj9JIdbExnNdow47mI4HKDVbKJer6PT6aDb7aHXi9/6ZrPF/TYb5WLek/eAhqHCsVScjlW42hU8WEjYrcfYnvRwd5egVotQLoeIoojremphWElTFesoqrDTAZKO/G6EGi7W1/Hz06s4SzT0u1WM+xHGcYQg8OB5ewuCAL4f0BfhOC5TdrnvIk+mzLrKOzWUr+Pp4yWe//gn7p4EmM/YgEWCW9s10x5iMBhgMpmkjZiQPuPxhCXpc3/I3yNohotpV/0vQg2qUsDl/RC/fn8Tn54oWIzKpE+A5agIU1chFSTIkgRFkunfN01VSD0T81hHxmJ0Jmuok5ifrUw8uiljO5Jgl+soNxoo1RvwWTu/UuG6Bo+18ysRSqydOCuzjuIsKxuYxiYymiqlgLalYTc+wrD8Ee7OJKybXTzotnE+GuE2gbcEfRjH2FaruNNq4R67/JApi/UZzxNSKfRsZJqNOiwCKoqCp2cGfnnhYDuWcVZq4IKRXNQa+LxcxjPSRvjn7Ta+YEQXlOAlgS4Z4RM+tuP9Nv+fEVo19D1tNiMVlrynzeY0wXozop8wvSpC8s0NSZ02iV6tpemKvUqrna4l00olmFGVfcqKQmJvbuDNV1ncTmSMejUk/QqmgwhF32XjTPikiM2LDtNzBWVoHs2mekwOGZ3qyZTLJS5IbjblzsJFXNcJKFHDKyzmU+p4jbjfT1Uh9Cv8cDhCkkxTTQt9C/o4jpMGlenzzxoBhRbvJ1l8ufyQTZE5bSJSp0TalNPzfJ4UkdW3E0eR91lJssxJpKUaF/sZSVLT8ZUvKHi08fD1/RJWAxmt3px6ZmT9Y1TrbfQHYzSabRwzMqFjQWgRXTKdMsKY4jDThzOG6SJXIKCk43R0iI7/Ae6RNpvlAJt5BydJC4bpQTd9qoGT2Q1oPuVXhE8ZFktFjq0iJ5C9B5zOVzjMaTg4VFF3LezYBNF1WbFZBqah2cge6cgeanzYQIEPK6qeDlwx0oSJ4WpZZppppiCLCxquZWWMtWc4rb+CZJXQjpcIKgNUmwm6/QVHf8yhO0eJ3xdJ1v//pjBVka6qW6iWCCgiO+DrV7MK8kcc61KIKwcasjkP1w4dHBx5uJ7zmQVLIzmQ0shZr/RDtf+mCEoVZAuLWME/vS8vJedK1eEAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;I am a image&quot;
+        title=&quot;I am a image&quot;
+        src=&quot;/static/d821e7f9a83e78d42d67389f45c05b58/96c67/TIM20200330113811.png&quot;
+        srcset=&quot;/static/d821e7f9a83e78d42d67389f45c05b58/c26ae/TIM20200330113811.png 158w,
+/static/d821e7f9a83e78d42d67389f45c05b58/6bdcf/TIM20200330113811.png 315w,
+/static/d821e7f9a83e78d42d67389f45c05b58/96c67/TIM20200330113811.png 388w&quot;
+        sizes=&quot;(max-width: 388px) 100vw, 388px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Enter the boost directory and run &lt;code class=&quot;language-text&quot;&gt;bootstrap.bat&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;进入 boost 目录然后运行 &lt;code class=&quot;language-text&quot;&gt;bootstrap.bat&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Get a &lt;code class=&quot;language-text&quot;&gt;b2.exe&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;获得一个 &lt;code class=&quot;language-text&quot;&gt;b2.exe&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;run&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;b2 --help&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Boost.Build 4.0-git
+
+Project-specific help:
+
+  Project has jamfile at Jamroot
+
+Usage:
+
+  b2 [options] [properties] [install|stage]
+
+  Builds and installs Boost.
+
+Targets and Related Options:
+
+  install                 Install headers and compiled library files to the
+  =======                 configured locations (below).
+
+  --prefix=&amp;lt;PREFIX&amp;gt;       Install architecture independent files here.
+                          Default: C:\Boost on Windows
+                          Default: /usr/local on Unix, Linux, etc.
+
+  --exec-prefix=&amp;lt;EPREFIX&amp;gt; Install architecture dependent files here.
+                          Default: &amp;lt;PREFIX&amp;gt;
+
+  --libdir=&amp;lt;LIBDIR&amp;gt;       Install library files here.
+                          Default: &amp;lt;EPREFIX&amp;gt;/lib
+
+  --includedir=&amp;lt;HDRDIR&amp;gt;   Install header files here.
+                          Default: &amp;lt;PREFIX&amp;gt;/include
+
+  --cmakedir=&amp;lt;CMAKEDIR&amp;gt;   Install CMake configuration files here.
+                          Default: &amp;lt;LIBDIR&amp;gt;/cmake
+
+  --no-cmake-config       Do not install CMake configuration files.
+
+  stage                   Build and install only compiled library files to the
+  =====                   stage directory.
+
+  --stagedir=&amp;lt;STAGEDIR&amp;gt;   Install library files here
+                          Default: ./stage
+
+Other Options:
+
+  --build-type=&amp;lt;type&amp;gt;     Build the specified pre-defined set of variations of
+                          the libraries. Note, that which variants get built
+                          depends on what each library supports.
+
+                              -- minimal -- (default) Builds a minimal set of
+                              variants. On Windows, these are static
+                              multithreaded libraries in debug and release
+                              modes, using shared runtime. On Linux, these are
+                              static and shared multithreaded libraries in
+                              release mode.
+
+                              -- complete -- Build all possible variations.
+
+  --build-dir=DIR         Build in this location instead of building within
+                          the distribution tree. Recommended!
+
+  --show-libraries        Display the list of Boost libraries that require
+                          build and installation steps, and then exit.
+
+  --layout=&amp;lt;layout&amp;gt;       Determine whether to choose library names and header
+                          locations such that multiple versions of Boost or
+                          multiple compilers can be used on the same system.
+
+                              -- versioned -- Names of boost binaries include
+                              the Boost version number, name and version of
+                              the compiler and encoded build properties. Boost
+                              headers are installed in a subdirectory of
+                              &amp;lt;HDRDIR&amp;gt; whose name contains the Boost version
+                              number.
+
+                              -- tagged -- Names of boost binaries include the
+                              encoded build properties such as variant and
+                              threading, but do not including compiler name
+                              and version, or Boost version. This option is
+                              useful if you build several variants of Boost,
+                              using the same compiler.
+
+                              -- system -- Binaries names do not include the
+                              Boost version number or the name and version
+                              number of the compiler. Boost headers are
+                              installed directly into &amp;lt;HDRDIR&amp;gt;. This option is
+                              intended for system integrators building
+                              distribution packages.
+
+                          The default value is &amp;#39;versioned&amp;#39; on Windows, and
+                          &amp;#39;system&amp;#39; on Unix.
+
+  --buildid=ID            Add the specified ID to the name of built libraries.
+                          The default is to not add anything.
+
+  --python-buildid=ID     Add the specified ID to the name of built libraries
+                          that depend on Python. The default is to not add
+                          anything. This ID is added in addition to --buildid.
+
+  --help                  This message.
+
+  --with-&amp;lt;library&amp;gt;        Build and install the specified &amp;lt;library&amp;gt;. If this
+                          option is used, only libraries specified using this
+                          option will be built.
+
+  --without-&amp;lt;library&amp;gt;     Do not build, stage, or install the specified
+                          &amp;lt;library&amp;gt;. By default, all libraries are built.
+
+Properties:
+
+  toolset=toolset         Indicate the toolset to build with.
+
+  variant=debug|release   Select the build variant
+
+  link=static|shared      Whether to build static or shared libraries
+
+  threading=single|multi  Whether to build single or multithreaded binaries
+
+  runtime-link=static|shared
+                          Whether to link to static or shared C and C++
+                          runtime.
+
+
+General command line usage:
+
+    b2 [options] [properties] [targets]
+
+  Options, properties and targets can be specified in any order.
+
+Important Options:
+
+  * --clean Remove targets instead of building
+  * -a Rebuild everything
+  * -n Don&amp;#39;t execute the commands, only print them
+  * -d+2 Show commands as they are executed
+  * -d0 Suppress all informational messages
+  * -q Stop at first error
+  * --reconfigure Rerun all configuration checks
+  * --debug-configuration Diagnose configuration
+  * --debug-building Report which targets are built with what properties
+  * --debug-generator Diagnose generator search/execution
+
+Further Help:
+
+  The following options can be used to obtain additional documentation.
+
+  * --help-options Print more obscure command line options.
+  * --help-internal Boost.Build implementation details.
+  * --help-doc-options Implementation details doc formatting.
+
+...found 1 target...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;I want the full version, &lt;code class=&quot;language-text&quot;&gt;--build-type = complete&lt;/code&gt; means build all versions&lt;/p&gt;
+&lt;p&gt;我想要全部版本，&lt;code class=&quot;language-text&quot;&gt;--build-type=complete&lt;/code&gt; 表示编译所有版本&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;b2 --toolset&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;msvc-16.5.1 --build-type&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;complete stage&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;--toolset=msvc-16.5.1&lt;/code&gt; Set the compiled version, which can be found in the menu about in vs&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;--toolset=msvc-16.5.1&lt;/code&gt; 设置编译版本，可以在vs中的菜单关于中找到&lt;/p&gt;
+&lt;p&gt;It takes a long time to compile, you can specify the date_time to compile&lt;/p&gt;
+&lt;p&gt;编译全部时间比较久，可以先指定编译 date_time 体验一下&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;b2 --toolset&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;msvc-16.5.1 --build-type&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;complete  --with-date_time stage&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;  stage                   Build and install only compiled library files to the
+  =====                   stage directory.
+  
+  --stagedir=&amp;lt;STAGEDIR&amp;gt;   Install library files here
+                          Default: ./stage&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Follow the prompts to know the default compiled files are in the ./stage directory&lt;/p&gt;
+&lt;p&gt;根据提示知道默认编译后的文件在./stage目录&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/13c6399460a920ae69e3193af9d7dfdd/339e3/TIM20200330121151.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 63.291139240506325%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAANCAYAAACpUE5eAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB8UlEQVQ4y11TCW7jMAzM/59X7GKLdTe1HduRD/mM72OWQ0dpUQGEKFscDofUpSwt0jRFXdd4PB5omgZ936PrOrRi8zxj33ccx677tm268/u6rnqXxm+0Cy88+gGr7Azi+bsdx6HWdj3GaQbXum7oh/HprxjGSX3eu+z7gXmsUZYllmVREF6iOVCutu3QtC3GcVQmrGhZ1heQSy4Mdy3583qFHwRIkhhhGML3ffXzPNcgSkOfQARM4hjGGEzTKUlVVWfJzEJ2vJxlufwoURSFJDEoCNDUCkhNnb4MZAxBWBWlov4KSJr8GUURblGMNMtwl8xGWHOf5lM3gpUC0EngJoEkUNhSdeWZkiggLwexwdv7FW9/fbx/RvjlBfhzjfD7Xwjbr2gEMzAlrnGOKBfgYYMXJPgIJXE9ohp23LJKG6uA1CIWTahlJgyZ3flOm1YaUj1Ha3s2xZ0XaWDTtF8MqRkbYEwqJaew0gBzv5+geaY6fZ9RBtKvxfidM8mzdpmAt1sIz/Oks4F02le2gezsdpIkyoBMyZyBHJGikCY+u05Aa+0XwziOBCDAXVgRgBKQHY3suRjI5rHbHDUmsK/z9hqnyzljpQaTgbWFaFNpRgaxJC7uDB6GQQPd03QS6O5Kdm/0p7n36V7D+aaPl//zP+0/WVXnP8rVmLYAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;I am a image&quot;
+        title=&quot;I am a image&quot;
+        src=&quot;/static/13c6399460a920ae69e3193af9d7dfdd/f058b/TIM20200330121151.png&quot;
+        srcset=&quot;/static/13c6399460a920ae69e3193af9d7dfdd/c26ae/TIM20200330121151.png 158w,
+/static/13c6399460a920ae69e3193af9d7dfdd/6bdcf/TIM20200330121151.png 315w,
+/static/13c6399460a920ae69e3193af9d7dfdd/f058b/TIM20200330121151.png 630w,
+/static/13c6399460a920ae69e3193af9d7dfdd/40601/TIM20200330121151.png 945w,
+/static/13c6399460a920ae69e3193af9d7dfdd/339e3/TIM20200330121151.png 977w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;link= static ： 静态库。 生成的库文件名称以 “lib”开头&lt;/p&gt;
+&lt;p&gt;link= shared ： 动态库。生成的库文件名称无“lib”开头&lt;/p&gt;
+&lt;p&gt;threading= mult : 支持多线程。 生成的库文件名称中包含 “-mt”&lt;/p&gt;
+&lt;p&gt;variant=release  生成的库文件名称不包含 “-gd”&lt;/p&gt;
+&lt;p&gt;variant= debug  生成的库文件名称包含 “-gd”&lt;/p&gt;
+&lt;p&gt;runtime-link= static  生成的库文件名称包含 “-s”&lt;/p&gt;
+&lt;p&gt;runtime-link= shared  生成的库文件名称不包含 “-s”&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;  --without-&amp;lt;library&amp;gt;     Do not build, stage, or install the specified
+                          &amp;lt;library&amp;gt;. By default, all libraries are built.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We can also use &lt;code class=&quot;language-text&quot;&gt;without&lt;/code&gt; to exclude libraries to be compiled&lt;/p&gt;
+&lt;p&gt;我们也可以使用 &lt;code class=&quot;language-text&quot;&gt;without&lt;/code&gt; 排除要编译的库&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/d9f5d0b9ea97451706675b49a405cbc0/d67ca/TIM20200330121459.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 18.354430379746837%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAECAYAAACOXx+WAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAo0lEQVQY01VO1w7EMAzK/3/oDTWrzWg2Z/vah1pC2IBI1LZpWGsQYyS2yDnDOSf3cRwopWDOiTGG8Fr//QZrt99ah/LewzpPBQkhBBKbFKWUBL13KlmCSt5ZqhTwsNavIt5ZV2wE+k1M+QrhMXzPq9C4Ha+vfpSmfGIzXnKcUWftaNXh/f1A+4hKudIXyrgB4Uq8xwzjA+weYQicy2RoeoiZMz+byDh4KHpZkgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;I am a image&quot;
+        title=&quot;I am a image&quot;
+        src=&quot;/static/d9f5d0b9ea97451706675b49a405cbc0/f058b/TIM20200330121459.png&quot;
+        srcset=&quot;/static/d9f5d0b9ea97451706675b49a405cbc0/c26ae/TIM20200330121459.png 158w,
+/static/d9f5d0b9ea97451706675b49a405cbc0/6bdcf/TIM20200330121459.png 315w,
+/static/d9f5d0b9ea97451706675b49a405cbc0/f058b/TIM20200330121459.png 630w,
+/static/d9f5d0b9ea97451706675b49a405cbc0/d67ca/TIM20200330121459.png 714w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;bin.v2&lt;/code&gt; is an intermediate file generated by compilation, which can be deleted after compilation&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;bin.v2&lt;/code&gt; 是编译产生的中间文件，编译完后可以删除&lt;/p&gt;
+&lt;p&gt;You can also use &lt;code class=&quot;language-text&quot;&gt;--build-dir = DIR&lt;/code&gt; to specify the output directory&lt;/p&gt;
+&lt;p&gt;也可以使用 &lt;code class=&quot;language-text&quot;&gt;--build-dir=DIR&lt;/code&gt; 指定输出目录&lt;/p&gt;
+&lt;p&gt;编译特定版本，使用的参数&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;  toolset=toolset         Indicate the toolset to build with.
+
+  variant=debug|release   Select the build variant
+
+  link=static|shared      Whether to build static or shared libraries
+
+  threading=single|multi  Whether to build single or multithreaded binaries
+
+  runtime-link=static|shared
+                          Whether to link to static or shared C and C++
+                          runtime.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;address-model: Add &lt;code class=&quot;language-text&quot;&gt;address-model=64&lt;/code&gt; to compile 64-bit version
+添加 &lt;code class=&quot;language-text&quot;&gt;address-model=64&lt;/code&gt; 来编译64位版本&lt;/p&gt;</content:encoded></item><item><title><![CDATA[c++ template class export]]></title><description><![CDATA[c++ template class export c++ 模板类导出 The focus is on  重点是  template function export 模板函数导出 class export 类导出 warning C4251 https://docs…]]></description><link>https://aphage.me/cplusplus-template-class-export/</link><guid isPermaLink="false">https://aphage.me/cplusplus-template-class-export/</guid><pubDate>Sun, 29 Mar 2020 21:20:46 GMT</pubDate><content:encoded>&lt;h1&gt;c++ template class export&lt;/h1&gt;
+&lt;p&gt;c++ 模板类导出&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;c++&quot;&gt;&lt;pre class=&quot;language-c++&quot;&gt;&lt;code class=&quot;language-c++&quot;&gt;template&amp;lt;typename T&amp;gt;
+class __declspec(dllexport) Hello3 {
+
+public:
+	Hello3(std::string&amp;amp;&amp;amp; name) {
+		this-&amp;gt;name = name;
+	}
+
+	void Say(T v) {
+		std::cout &amp;lt;&amp;lt; name &amp;lt;&amp;lt; &amp;quot;: &amp;quot; &amp;lt;&amp;lt; v &amp;lt;&amp;lt; std::endl;
+	}
+
+private:
+	std::string name;
+};
+
+//Explicit instantiation
+template class Hello3&amp;lt;std::string&amp;gt;;
+template class __declspec(dllexport) Hello3&amp;lt;int&amp;gt;;
+//__declspec(dllexport) can be written on the CLASS or here
+//__declspec(dllexport) 可以写在 CLASS 上或在这里&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The focus is on &lt;code class=&quot;language-text&quot;&gt;Explicit instantiation&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;重点是 &lt;code class=&quot;language-text&quot;&gt;Explicit instantiation&lt;/code&gt;&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;h2&gt;template function export&lt;/h2&gt;
+&lt;p&gt;模板函数导出&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;c++&quot;&gt;&lt;pre class=&quot;language-c++&quot;&gt;&lt;code class=&quot;language-c++&quot;&gt;//__declspec(dllexport) cannot be written here
+//这里不能写 __declspec(dllexport)
+template&amp;lt;typename T&amp;gt;
+T Echo(T&amp;amp;&amp;amp; v) {
+	std::cout &amp;lt;&amp;lt; &amp;quot;Echo: &amp;quot; &amp;lt;&amp;lt; v &amp;lt;&amp;lt; std::endl;
+	return v;
+}
+
+//Explicit instantiation
+template __declspec(dllexport) int Echo(int&amp;amp;&amp;amp;);
+template __declspec(dllexport) double Echo(double&amp;amp;&amp;amp;);&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;class export&lt;/h2&gt;
+&lt;p&gt;类导出&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;c++&quot;&gt;&lt;pre class=&quot;language-c++&quot;&gt;&lt;code class=&quot;language-c++&quot;&gt;class __declspec(dllexport) Hello {
+
+public:
+	Hello(std::string&amp;amp;&amp;amp; name) {
+		this-&amp;gt;name = name;
+	}
+
+	void Say(std::string&amp;amp;&amp;amp; s) {
+		std::cout &amp;lt;&amp;lt; name &amp;lt;&amp;lt; &amp;quot;: &amp;quot; &amp;lt;&amp;lt; s &amp;lt;&amp;lt; std::endl;
+	}
+
+private:
+	std::string name;
+};
+
+class Hello2 {
+
+public:
+	__declspec(dllexport)	Hello2(std::string&amp;amp;&amp;amp; name) {
+		this-&amp;gt;name = name;
+	}
+	__declspec(dllexport) ~Hello2() {
+
+	}
+
+	__declspec(dllexport) void Say(std::string&amp;amp;&amp;amp; s) {
+		std::cout &amp;lt;&amp;lt; name &amp;lt;&amp;lt; &amp;quot;: &amp;quot; &amp;lt;&amp;lt; s &amp;lt;&amp;lt; std::endl;
+	}
+
+private:
+	std::string name;
+};&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;warning C4251&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4251?view=vs-2019&quot;&gt;https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4251?view=vs-2019&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The implementation version may be inconsistent, such &lt;code class=&quot;language-text&quot;&gt;std::string&lt;/code&gt; &lt;/p&gt;
+&lt;p&gt;可能实现版本不一致, 比如 &lt;code class=&quot;language-text&quot;&gt;std::string&lt;/code&gt; &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;c++&quot;&gt;&lt;pre class=&quot;language-c++&quot;&gt;&lt;code class=&quot;language-c++&quot;&gt;// C4251.cpp
+// compile with: /EHsc /MTd /W2 /c
+#include &amp;lt;vector&amp;gt;
+using namespace std;
+class Node;
+class __declspec(dllexport) VecWrapper : vector&amp;lt;Node *&amp;gt; {};   // C4251&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The solution have&lt;/p&gt;
+&lt;p&gt;解决方式有&lt;/p&gt;
+&lt;p&gt;Export the used template classes, and also export the dependencies&lt;/p&gt;
+&lt;p&gt;把用到的模板类也导出，依赖也要导出&lt;/p&gt;
+&lt;p&gt;Yourself Instantiate in the constructor&lt;/p&gt;
+&lt;p&gt;在构造函数中自己实例化&lt;/p&gt;
+&lt;p&gt;like this: &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;c++&quot;&gt;&lt;pre class=&quot;language-c++&quot;&gt;&lt;code class=&quot;language-c++&quot;&gt;class EXPORT Hello4 {
+
+public:
+	Hello4(const char* name) {
+		this-&amp;gt;name = new std::string(name);
+	}
+	~Hello4() {
+		delete this-&amp;gt;name;
+	}
+
+private:
+	std::string* name;
+};&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;demo&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/aphage/demo/tree/master/c-cplusplus/cplusplus-class-export&quot;&gt;https://github.com/aphage/demo/tree/master/c-cplusplus/cplusplus-class-export&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;c++&quot;&gt;&lt;pre class=&quot;language-c++&quot;&gt;&lt;code class=&quot;language-c++&quot;&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;string&amp;gt;
+
+#ifdef MAKEDLL
+#  define EXPORT __declspec(dllexport)
+#else
+#  define EXPORT __declspec(dllimport)
+#endif
+
+
+class EXPORT Hello {
+
+public:
+	Hello(std::string&amp;amp;&amp;amp; name);
+
+	void Say(std::string&amp;amp;&amp;amp; s);
+
+private:
+	std::string name;
+};
+
+class Hello2 {
+
+public:
+	EXPORT	Hello2(std::string&amp;amp;&amp;amp; name);
+	EXPORT ~Hello2();
+
+	EXPORT void Say(std::string&amp;amp;&amp;amp; s);
+
+private:
+	std::string name;
+};
+
+template&amp;lt;typename T&amp;gt;
+class EXPORT Hello3 {
+
+public:
+	Hello3(std::string&amp;amp;&amp;amp; name);
+
+	void Say(T v);
+
+private:
+	std::string name;
+};
+
+template&amp;lt;typename T&amp;gt;
+EXPORT T Echo(T&amp;amp;&amp;amp; v);
+
+
+class EXPORT Hello4 {
+
+public:
+	Hello4(const char* name);
+	~Hello4();
+
+	void Say(const char* s);
+
+private:
+	std::string* name;
+};
+
+#pragma comment(lib,&amp;quot;./../Debug/hello-aphage.lib&amp;quot;)
+
+int main() {
+	Hello hello(&amp;quot;aphage&amp;quot;);
+	hello.Say(&amp;quot;aqua suki&amp;quot;);
+
+	Hello2 hello2(&amp;quot;aphage&amp;quot;);
+	hello2.Say(&amp;quot;alice suki,alice foo foo~&amp;quot;);
+
+	Hello3&amp;lt;std::string&amp;gt; hello3(&amp;quot;aphage&amp;quot;);
+	hello3.Say(&amp;quot;aqua suki&amp;quot;);
+
+	Hello3&amp;lt;int&amp;gt; hello31(&amp;quot;aphage&amp;quot;);
+	hello31.Say(1);
+
+	//error, No explicit instantiation
+	//Hello3&amp;lt;char&amp;gt; hello31(&amp;quot;aphage&amp;quot;);
+	//hello31.Say(1);
+
+	Echo&amp;lt;int&amp;gt;(2233);
+
+	Hello4 hello4(&amp;quot;aphage&amp;quot;);
+	hello4.Say(&amp;quot;aqua suki&amp;quot;);
+
+	//https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4251?view=vs-2019
+
+	return 0;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/0ae286e8352a4e8b5818cae26bf5d872/f793b/TIM20200425162533.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 33.54430379746836%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAHCAYAAAAIy204AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA+UlEQVQoz52RzWqEMBRGRUVQwZUL/5MYMxN1RualWvoKblwIuuu88tebDA6lhdJ2ccjNhXvuF+Loq4YeR5yVgmwFmoaBMYaqrlCWpaWqKhRF8SNZnmG6TXBU30GNF1yGHlp1EJxBCI7Xlzes64plWTDPs633fce2bd84+vf7OwkHEg4DdE9JtYaSEpxzTNcJIyXvug55nqOua5vE1F+xKXNKmWUPodQ91PlEw0bG7HCapojjGK7rwnGc33MiYasFZC/AO0ZwK0ySBFEUIQxDeJ73gORmwfNOuJ96drkRSnqWkOZDGosR+r7/t2QHLYkEF0/RcQZB8C/hByQPvHho7vdPAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;I am a image&quot;
+        title=&quot;I am a image&quot;
+        src=&quot;/static/0ae286e8352a4e8b5818cae26bf5d872/f058b/TIM20200425162533.png&quot;
+        srcset=&quot;/static/0ae286e8352a4e8b5818cae26bf5d872/c26ae/TIM20200425162533.png 158w,
+/static/0ae286e8352a4e8b5818cae26bf5d872/6bdcf/TIM20200425162533.png 315w,
+/static/0ae286e8352a4e8b5818cae26bf5d872/f058b/TIM20200425162533.png 630w,
+/static/0ae286e8352a4e8b5818cae26bf5d872/40601/TIM20200425162533.png 945w,
+/static/0ae286e8352a4e8b5818cae26bf5d872/78612/TIM20200425162533.png 1260w,
+/static/0ae286e8352a4e8b5818cae26bf5d872/f793b/TIM20200425162533.png 1404w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/aphage/demo/tree/master/c-cplusplus/cplusplus-class-export&quot;&gt;https://github.com/aphage/demo/tree/master/c-cplusplus/cplusplus-class-export&lt;/a&gt;&lt;/p&gt;</content:encoded></item></channel></rss>
