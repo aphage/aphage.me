@@ -7,7 +7,7 @@ categories:
 
 ## 什么是 Wow64
 
-Wow64 是让 64 位的 Windows 可以运行 Win32 程序的兼容层
+Wow64 是让 64 位的 Windows 可以运行 Win32 程序的兼容层，在 64 位系统上运行的 32 位程序 本质是一个 64 位程序
 
 在操作系统安装目录中 `Windows/SysWOW64 ` 就是 32 位程序的 runtime（运行时）库，`Windows/System32 ` 则是 64 位程序 runtime 库，在运行 Win32 程序时 `Windows/System32 ` 目录会被重定向到 `Windows/SysWOW64 ` 目录。
 
@@ -45,6 +45,8 @@ Wow64
 现在我们知道 Wow64 Gate 地址保存在 `fs:[0xC0]` 中 ，在 TEB 结构中是 `WOW32Reserved ` 成员
 
 完成后
+
+[https://github.com/aphage/wow64-gate-hook](https://github.com/aphage/wow64-gate-hook)
 
 ![I am a image](procmon-view.png)
 
